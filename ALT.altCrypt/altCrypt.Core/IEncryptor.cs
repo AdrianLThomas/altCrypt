@@ -3,7 +3,7 @@ using System.IO;
 
 namespace altCrypt.Core
 {
-    public interface IEncrypt
+    public interface IEncryptor
     {
         Stream Encrypt(IFile file);
     }

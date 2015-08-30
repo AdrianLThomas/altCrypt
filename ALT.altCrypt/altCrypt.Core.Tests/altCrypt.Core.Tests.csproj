@@ -55,13 +55,17 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="FileEncryptTests.cs" />
+    <Compile Include="FileEncryptorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\altCrypt.Core.x86\altCrypt.Core.x86.csproj">
+      <Project>{eb4f3e3d-6ba4-43e9-9ae6-fe3bf03d9219}</Project>
+      <Name>altCrypt.Core.x86</Name>
+    </ProjectReference>
     <ProjectReference Include="..\altCrypt.Core\altCrypt.Core.csproj">
       <Project>{b3fe7680-4359-4ff1-a0ea-5a3cf98f1d50}</Project>
       <Name>altCrypt.Core</Name>
