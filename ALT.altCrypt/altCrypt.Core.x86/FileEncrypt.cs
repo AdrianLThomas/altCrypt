@@ -1,8 +1,9 @@
 ﻿using altCrypt.Core.FileSystem;
 using System;
 using System.IO;
+using System.Security.Cryptography;
 
-namespace altCrypt.Core
+namespace altCrypt.Core.x86
 {
     public class FileEncrypt : IEncrypt
     {
@@ -11,7 +12,7 @@ namespace altCrypt.Core
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
 
-            //SHA512 shaProvider = System.Security.Cryptography.SHA512CryptoServiceProvider.Create();
+            SHA512 shaProvider = System.Security.Cryptography.SHA512.Create();
             return null;
         }
     }
