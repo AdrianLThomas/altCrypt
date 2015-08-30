@@ -3,12 +3,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E6E6F189-7F60-4EBB-8B1B-0CA4A260F2A4}</ProjectGuid>
+    <ProjectGuid>{1356215E-FBF0-4B9B-AA18-2DC6BCE0C462}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>altCrypt.Core.Tests</RootNamespace>
-    <AssemblyName>altCrypt.Core.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <RootNamespace>altCrypt.Core.x86.Tests</RootNamespace>
+    <AssemblyName>altCrypt.Core.x86.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -16,7 +16,6 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,10 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Moq, Version=4.2.1507.118, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\packages\Moq.4.2.1507.0118\lib\net40\Moq.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -55,13 +50,14 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="FileEncryptTests.cs" />
+    <Compile Include="FileSystem\LocalFileTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\altCrypt.Core.x86\altCrypt.Core.x86.csproj">
+      <Project>{eb4f3e3d-6ba4-43e9-9ae6-fe3bf03d9219}</Project>
+      <Name>altCrypt.Core.x86</Name>
+    </ProjectReference>
     <ProjectReference Include="..\altCrypt.Core\altCrypt.Core.csproj">
       <Project>{b3fe7680-4359-4ff1-a0ea-5a3cf98f1d50}</Project>
       <Name>altCrypt.Core</Name>

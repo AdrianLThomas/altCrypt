@@ -11,7 +11,8 @@ namespace altCrypt.Core
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
 
-            throw new NotImplementedException();
+            //SHA512 shaProvider = System.Security.Cryptography.SHA512CryptoServiceProvider.Create();
+            return null;
         }
     }
 }

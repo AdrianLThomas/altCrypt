@@ -1,11 +1,12 @@
-﻿using System;
+﻿using altCrypt.Core.FileSystem;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace altCrypt.Core.FileSystem
+namespace altCrypt.Core.x86.FileSystem
 {
     public class LocalFile : IFile
     {
@@ -22,7 +23,7 @@ namespace altCrypt.Core.FileSystem
         public string Name
         {
             get
-            {
+            { 
                 return Path.GetFileName(_path);
             }
         }

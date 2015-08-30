@@ -1,8 +1,9 @@
 ﻿using altCrypt.Core.FileSystem;
+using altCrypt.Core.x86.FileSystem;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace altCrypt.Core.Tests.FileSystem
+namespace altCrypt.Core.Tests.x86.FileSystem
 {
     [TestClass]
     public class LocalFileTests
