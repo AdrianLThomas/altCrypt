@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ALT.altCrypt")]
+[assembly: AssemblyTitle("altCrypt.Client")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ALT.altCrypt")]
+[assembly: AssemblyProduct("altCrypt.Client")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("4c8a8c6e-1f93-4565-a386-df842a432a29")]
+[assembly: Guid("2769c8d0-ef37-4ba9-8859-13c45a517f27")]
 
 // Version information for an assembly consists of the following four values:
 //
