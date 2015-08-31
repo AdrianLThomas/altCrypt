@@ -2,6 +2,6 @@
 {
     public interface IKey
     {
-        byte[] GenerateBlock(BlockSize keySize);
+        byte[] GenerateBlock(int blockSize);
     }
 }

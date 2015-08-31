@@ -7,12 +7,18 @@ using Moq;
 using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace altCrypt.Core.Tests
 {
     [TestClass]
     public class FileEncryptorTests
     {
+        //TODO - This is the test string encrypted with AES - needs refactoring to not depend on AES.
+        private readonly byte[] _encryptedData = new byte[] { 85, 165, 12, 76, 67, 80, 153, 148, 245, 179, 39, 249, 129, 61, 110, 46, 1, 118, 7, 109, 252, 164, 24, 178, 204, 110, 42, 109, 225, 123, 176, 157, 225, 177, 35, 20, 224, 231, 137, 242, 185, 116, 248, 214, 143, 31, 49, 171 };
+
+        private SymmetricAlgorithm _encryptionProvider;
+        private IKey _key;
         private FileEncryptor _fileEncryptor;
         private MemoryStream _testStream;
         private IFile _file;
@@ -20,8 +26,10 @@ namespace altCrypt.Core.Tests
         [TestInitialize]
         public void Initialise()
         {
-            _fileEncryptor = new FileEncryptor(new Key("password"));
-            _testStream = GetTestStream();
+            _encryptionProvider = new AesCryptoServiceProvider();
+            _key = Mock.Of<IKey>();
+            _fileEncryptor = new FileEncryptor(new Key("password"), _encryptionProvider);
+            _testStream = GetUnencryptedTestStream();
             _file = Mock.Of<IFile>(m => m.Data == _testStream);
         }
 
@@ -29,7 +37,14 @@ namespace altCrypt.Core.Tests
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_ThrowsArgumentNullException_WhenKeyIsNull()
         {
-            new FileEncryptor(null);
+            new FileEncryptor(null, _encryptionProvider);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Ctor_ThrowsArgumentNullException_WhenEncryptionProviderIsNull()
+        {
+            new FileEncryptor(_key, null);
         }
 
         [TestMethod]
@@ -58,25 +73,60 @@ namespace altCrypt.Core.Tests
         public void Encrypt_ReturnsExpectedEncryptedStream_WhenFileParamIsValid()
         {
             //Arrange
-            byte[] expected = new byte[] { 85, 165, 12, 76, 67, 80, 153, 148, 245, 179, 39, 249, 129, 61, 110, 46, 1, 118, 7, 109, 252, 164, 24, 178, 204, 110, 42, 109, 225, 123, 176, 157, 225, 177, 35, 20, 224, 231, 137, 242, 185, 116, 248, 214, 143, 31, 49, 171 }; //Encrypted: GetTestPassword()
-            byte[] result;
+            byte[] expected = _encryptedData; //AES Encrypted: GetTestPassword()
+            byte[] actual;
 
             //Act
             using (_testStream)
             {
                 using (Stream encryptedResultStream = _fileEncryptor.Encrypt(_file))
                 {
-                    result = encryptedResultStream.ReadAll();
+                    actual = encryptedResultStream.ReadAll();
                 }
             }
 
             //Assert
-            Assert.IsTrue(result.SequenceEqual(expected));
+            Assert.IsTrue(actual.SequenceEqual(expected));
         }
 
-        private MemoryStream GetTestStream()
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Decrypt_ThrowsArgumentNullException_WhenFileParamIsNull()
+        {
+            _fileEncryptor.Decrypt(null);
+        }
+
+        [TestMethod]
+        public void Decrypt_ReturnsExpectedDecryptedStream_WhenFileParamIsValid()
+        {
+            //Arrange
+            var encryptedFile = Mock.Of<IFile>(m => m.Data == GetEncryptedTestStream());
+            byte[] expected = GetTestPassword();
+            byte[] actual;
+
+            //Act
+            using (Stream decryptedStream = _fileEncryptor.Decrypt(encryptedFile))
+            {
+                actual = decryptedStream.ReadAll();
+            }
+
+            //Assert
+            Assert.IsTrue(actual.SequenceEqual(expected));
+        }
+
+
+        private MemoryStream GetUnencryptedTestStream()
         {
             byte[] bytes = GetTestPassword();
+
+            var memStream = new MemoryStream();
+            memStream.Write(bytes, 0, bytes.Length);
+            return memStream;
+        }
+
+        private MemoryStream GetEncryptedTestStream()
+        {
+            byte[] bytes = _encryptedData;
 
             var memStream = new MemoryStream();
             memStream.Write(bytes, 0, bytes.Length);
