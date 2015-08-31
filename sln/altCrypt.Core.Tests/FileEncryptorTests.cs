@@ -23,7 +23,7 @@ namespace altCrypt.Core.Tests
         [TestInitialize]
         public void Initialise()
         {
-            _encryptionProvider = new AesCryptoServiceProvider(); //TODO - Mock this
+            _encryptionProvider = new AesCryptoServiceProvider();
             _key = Mock.Of<IKey>();
             _fileEncryptor = new FileEncryptor(new Key("password"), _encryptionProvider);
             _testStream = GetTestStream();
