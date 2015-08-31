@@ -1,7 +1,7 @@
 ﻿using altCrypt.Core.FileSystem;
 using System.IO;
 
-namespace altCrypt.Core
+namespace altCrypt.Core.Encryption
 {
     public interface IEncryptor
     {

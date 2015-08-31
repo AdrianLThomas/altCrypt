@@ -1,6 +1,8 @@
-﻿using altCrypt.Core.Extensions;
+﻿using altCrypt.Core.Encryption;
+using altCrypt.Core.Extensions;
 using altCrypt.Core.FileSystem;
 using altCrypt.Core.x86;
+using altCrypt.Core.x86.Encryption;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -19,7 +21,7 @@ namespace altCrypt.Core.Tests
         [TestInitialize]
         public void Initialise()
         {
-            _fileEncryptor = new FileEncryptor("password");
+            _fileEncryptor = new FileEncryptor(new Key("password")); //TODO - mock this
             _testStream = GetTestStream();
             _file = Mock.Of<IFile>(m => m.Data == _testStream);
         }
@@ -29,13 +31,6 @@ namespace altCrypt.Core.Tests
         public void Ctor_ThrowsArgumentNullException_WhenKeyIsNull()
         {
             new FileEncryptor(null);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Ctor_ThrowsArgumentNullException_WhenKeyIsEmpty()
-        {
-            new FileEncryptor(string.Empty);
         }
 
         [TestMethod]

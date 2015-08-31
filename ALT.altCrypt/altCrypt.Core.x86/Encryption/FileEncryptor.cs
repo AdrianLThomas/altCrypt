@@ -6,16 +6,17 @@ using System.Text;
 using System.Linq;
 using System.Collections.Generic;
 using altCrypt.Core.Extensions;
+using altCrypt.Core.Encryption;
 
-namespace altCrypt.Core.x86
+namespace altCrypt.Core.x86.Encryption
 {
     public class FileEncryptor : IEncryptor
     {
-        private readonly string _key;
+        private readonly IKey _key;
 
-        public FileEncryptor(string key)
+        public FileEncryptor(IKey key)
         {
-            if (string.IsNullOrEmpty(key))
+            if (key == null)
                 throw new ArgumentNullException(nameof(key));
 
             _key = key;
@@ -27,7 +28,7 @@ namespace altCrypt.Core.x86
                 throw new ArgumentNullException(nameof(file));
 
             var provider = Aes.Create();
-            byte[] key = GenerateKey();
+            byte[] key = _key.GenerateKey(KeySize._128Bit);
             ICryptoTransform encryptor = provider.CreateEncryptor(key, key);
 
             byte[] buffer = file.Data.ReadAll();
@@ -38,23 +39,6 @@ namespace altCrypt.Core.x86
             cryptoStream.FlushFinalBlock();
 
             return memoryStream;
-        }
-
-        private byte[] GenerateKey()
-        {
-            var bytes = Encoding.ASCII.GetBytes(_key);
-
-            List<byte> byteList = new List<byte>();
-            byteList.AddRange(bytes);
-            int keySize = 128 / 8; //128 bit key size
-            int rem = keySize - bytes.Length;
-
-            for (int i = 0; i < rem; ++i)
-            {
-                byteList.Add(0);
-            }
-
-            return byteList.ToArray();
         }
     }
 }
