@@ -49,20 +49,20 @@ namespace altCrypt.Core.Tests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Encrypt_ThrowsArgumentNullException_WhenFileParamIsNull()
+        public void EncryptToStream_ThrowsArgumentNullException_WhenFileParamIsNull()
         {
-            _fileEncryptor.Encrypt(null);
+            _fileEncryptor.EncryptToStream(null);
         }
 
         [TestMethod]
-        public void Encrypt_ReturnsNonNullStream_WhenFileParamIsValid()
+        public void EncryptToStream_ReturnsNonNullStream_WhenFileParamIsValid()
         {
             //Arrange
             //Act
             Stream stream;
             using (_testStream)
             {
-                stream = _fileEncryptor.Encrypt(_file);
+                stream = _fileEncryptor.EncryptToStream(_file);
             }
 
             //Assert
@@ -70,7 +70,7 @@ namespace altCrypt.Core.Tests
         }
 
         [TestMethod]
-        public void Encrypt_ReturnsExpectedEncryptedStream_WhenFileParamIsValid()
+        public void EncryptToStream_ReturnsExpectedEncryptedStream_WhenFileParamIsValid()
         {
             //Arrange
             byte[] expected = _encryptedData; //AES Encrypted: GetTestPassword()
@@ -79,7 +79,7 @@ namespace altCrypt.Core.Tests
             //Act
             using (_testStream)
             {
-                using (Stream encryptedResultStream = _fileEncryptor.Encrypt(_file))
+                using (Stream encryptedResultStream = _fileEncryptor.EncryptToStream(_file))
                 {
                     actual = encryptedResultStream.ReadAll();
                 }
@@ -91,13 +91,13 @@ namespace altCrypt.Core.Tests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Decrypt_ThrowsArgumentNullException_WhenFileParamIsNull()
+        public void DecryptToStream_ThrowsArgumentNullException_WhenFileParamIsNull()
         {
-            _fileEncryptor.Decrypt(null);
+            _fileEncryptor.DecryptToStream(null);
         }
 
         [TestMethod]
-        public void Decrypt_ReturnsExpectedDecryptedStream_WhenFileParamIsValid()
+        public void DecryptToStream_ReturnsExpectedDecryptedStream_WhenFileParamIsValid()
         {
             //Arrange
             var encryptedFile = Mock.Of<IFile>(m => m.Data == GetEncryptedTestStream());
@@ -105,7 +105,7 @@ namespace altCrypt.Core.Tests
             byte[] actual;
 
             //Act
-            using (Stream decryptedStream = _fileEncryptor.Decrypt(encryptedFile))
+            using (Stream decryptedStream = _fileEncryptor.DecryptToStream(encryptedFile))
             {
                 actual = decryptedStream.ReadAll();
             }
