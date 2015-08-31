@@ -28,15 +28,11 @@ namespace altCrypt.Core.Encryption
 
         public byte[] GenerateBlock(BlockSize keySize)
         {
-            List<byte> byteList = new List<byte>();
-            byteList.AddRange(_key);
             int keySizeInt = (int)keySize / 8;
             int rem = keySizeInt - _key.Length;
 
-            for (int i = 0; i < rem; ++i)
-            {
-                byteList.Add(0);
-            }
+            List<byte> byteList = new List<byte>(_key);
+            byteList.AddRange(new byte[rem]);
 
             return byteList.ToArray();
         }
