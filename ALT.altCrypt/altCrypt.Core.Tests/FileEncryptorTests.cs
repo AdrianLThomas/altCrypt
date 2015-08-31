@@ -64,7 +64,7 @@ namespace altCrypt.Core.Tests
         public void Encrypt_ReturnsExpectedEncryptedStream_WhenFileParamIsValid()
         {
             //Arrange
-            byte[] expected = new byte[] { 4, 97, 154, 112, 214, 121, 7, 58, 244, 91, 177, 45, 97, 0, 29, 22, 54, 103, 204, 167, 120, 22, 5, 205, 151, 197, 106, 25, 27, 29, 233, 61, 241, 59, 227, 146, 27, 45, 178, 86, 135, 27, 93, 140, 148, 55, 216, 215 }; //Encrypted: GetTestPassword()
+            byte[] expected = new byte[] { 85, 165, 12, 76, 67, 80, 153, 148, 245, 179, 39, 249, 129, 61, 110, 46, 1, 118, 7, 109, 252, 164, 24, 178, 204, 110, 42, 109, 225, 123, 176, 157, 225, 177, 35, 20, 224, 231, 137, 242, 185, 116, 248, 214, 143, 31, 49, 171 }; //Encrypted: GetTestPassword()
             byte[] result;
 
             //Act
