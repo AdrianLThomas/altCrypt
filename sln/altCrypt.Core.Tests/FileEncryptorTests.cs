@@ -7,12 +7,15 @@ using Moq;
 using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace altCrypt.Core.Tests
 {
     [TestClass]
     public class FileEncryptorTests
     {
+        private SymmetricAlgorithm _encryptionProvider;
+        private IKey _key;
         private FileEncryptor _fileEncryptor;
         private MemoryStream _testStream;
         private IFile _file;
@@ -20,7 +23,9 @@ namespace altCrypt.Core.Tests
         [TestInitialize]
         public void Initialise()
         {
-            _fileEncryptor = new FileEncryptor(new Key("password"));
+            _encryptionProvider = new AesCryptoServiceProvider(); //TODO - Mock this
+            _key = Mock.Of<IKey>();
+            _fileEncryptor = new FileEncryptor(new Key("password"), _encryptionProvider);
             _testStream = GetTestStream();
             _file = Mock.Of<IFile>(m => m.Data == _testStream);
         }
@@ -29,7 +34,14 @@ namespace altCrypt.Core.Tests
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_ThrowsArgumentNullException_WhenKeyIsNull()
         {
-            new FileEncryptor(null);
+            new FileEncryptor(null, _encryptionProvider);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Ctor_ThrowsArgumentNullException_WhenEncryptionProviderIsNull()
+        {
+            new FileEncryptor(_key, null);
         }
 
         [TestMethod]
