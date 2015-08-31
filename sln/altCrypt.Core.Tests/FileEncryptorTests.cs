@@ -16,12 +16,13 @@ namespace altCrypt.Core.Tests
     {
         //TODO - This is the test string encrypted with AES - needs refactoring to not depend on AES.
         private readonly byte[] _encryptedData = new byte[] { 85, 165, 12, 76, 67, 80, 153, 148, 245, 179, 39, 249, 129, 61, 110, 46, 1, 118, 7, 109, 252, 164, 24, 178, 204, 110, 42, 109, 225, 123, 176, 157, 225, 177, 35, 20, 224, 231, 137, 242, 185, 116, 248, 214, 143, 31, 49, 171 };
+        private readonly byte[] _decryptedData = System.Text.Encoding.ASCII.GetBytes("Some secret text I want to encrypt");
 
         private SymmetricAlgorithm _encryptionProvider;
         private IKey _key;
         private FileEncryptor _fileEncryptor;
-        private MemoryStream _testStream;
-        private IFile _file;
+        private IFile _unencryptedFile;
+        private IFile _encryptedFile;
 
         [TestInitialize]
         public void Initialise()
@@ -29,8 +30,8 @@ namespace altCrypt.Core.Tests
             _encryptionProvider = new AesCryptoServiceProvider();
             _key = Mock.Of<IKey>();
             _fileEncryptor = new FileEncryptor(new Key("password"), _encryptionProvider);
-            _testStream = GetUnencryptedTestStream();
-            _file = Mock.Of<IFile>(m => m.Data == _testStream);
+            _unencryptedFile = Mock.Of<IFile>(m => m.Data == GetUnencryptedTestStream());
+            _encryptedFile = Mock.Of<IFile>(m => m.Data == GetEncryptedTestStream());
         }
 
         [TestMethod]
@@ -60,9 +61,9 @@ namespace altCrypt.Core.Tests
             //Arrange
             //Act
             Stream stream;
-            using (_testStream)
+            using (GetUnencryptedTestStream())
             {
-                stream = _fileEncryptor.EncryptToStream(_file);
+                stream = _fileEncryptor.EncryptToStream(_unencryptedFile);
             }
 
             //Assert
@@ -77,11 +78,11 @@ namespace altCrypt.Core.Tests
             byte[] actual;
 
             //Act
-            using (_testStream)
+            using (GetUnencryptedTestStream())
             {
-                using (Stream encryptedResultStream = _fileEncryptor.EncryptToStream(_file))
+                using (Stream encryptedResultStream = _fileEncryptor.EncryptToStream(_unencryptedFile))
                 {
-                    actual = encryptedResultStream.ReadAll();
+                    actual = encryptedResultStream.ToByteArray();
                 }
             }
 
@@ -100,15 +101,37 @@ namespace altCrypt.Core.Tests
         public void DecryptToStream_ReturnsExpectedDecryptedStream_WhenFileParamIsValid()
         {
             //Arrange
-            var encryptedFile = Mock.Of<IFile>(m => m.Data == GetEncryptedTestStream());
-            byte[] expected = GetTestPassword();
+            byte[] expected = _decryptedData;
             byte[] actual;
 
             //Act
-            using (Stream decryptedStream = _fileEncryptor.DecryptToStream(encryptedFile))
+            using (Stream decryptedStream = _fileEncryptor.DecryptToStream(_encryptedFile))
             {
-                actual = decryptedStream.ReadAll();
+                actual = decryptedStream.ToByteArray();
             }
+
+            //Assert
+            Assert.IsTrue(actual.SequenceEqual(expected));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Encrypt_ThrowsArgumentNullException_WhenFileParamIsNull()
+        {
+            _fileEncryptor.Encrypt(null);
+        }
+
+        [TestMethod]
+        public void Encrypt_EncryptsStream_WhenFileParamIsValid()
+        {
+            //Arrange
+            var fileToEncrypt = Mock.Of<IFile>(m => m.Data == GetUnencryptedTestStream());
+            byte[] expected = _encryptedData;
+            byte[] actual;
+
+            //Act
+            _fileEncryptor.Encrypt(fileToEncrypt);
+            actual = fileToEncrypt.Data.ToByteArray();
 
             //Assert
             Assert.IsTrue(actual.SequenceEqual(expected));
@@ -117,7 +140,7 @@ namespace altCrypt.Core.Tests
 
         private MemoryStream GetUnencryptedTestStream()
         {
-            byte[] bytes = GetTestPassword();
+            byte[] bytes = _decryptedData;
 
             var memStream = new MemoryStream();
             memStream.Write(bytes, 0, bytes.Length);
@@ -131,11 +154,6 @@ namespace altCrypt.Core.Tests
             var memStream = new MemoryStream();
             memStream.Write(bytes, 0, bytes.Length);
             return memStream;
-        }
-
-        private byte[] GetTestPassword()
-        {
-            return System.Text.Encoding.ASCII.GetBytes("Some secret text I want to encrypt");
         }
     }
 }

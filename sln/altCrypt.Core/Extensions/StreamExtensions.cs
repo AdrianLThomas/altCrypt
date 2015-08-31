@@ -4,7 +4,7 @@ namespace altCrypt.Core.Extensions
 {
     public static class StreamExtensions
     {
-        public static byte[] ReadAll(this Stream input)
+        public static byte[] ToByteArray(this Stream input)
         {
             input.Seek(0, SeekOrigin.Begin);
 
