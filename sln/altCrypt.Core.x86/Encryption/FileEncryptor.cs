@@ -40,5 +40,27 @@ namespace altCrypt.Core.x86.Encryption
 
             return memoryStream;
         }
+
+        public Stream Decrypt(IFile file)
+        {
+            if (file == null)
+                throw new ArgumentNullException(nameof(file));
+
+            byte[] key = _key.GenerateBlock(BlockSize._128Bit);
+            ICryptoTransform decryptor = _encryptionProvider.CreateDecryptor(key, key);
+
+            var decryptedMemoryStream = new MemoryStream();
+
+            using (var cryptoStream = new CryptoStream(file.Data, decryptor, CryptoStreamMode.Read))
+            {
+                file.Data.Seek(0, SeekOrigin.Begin);
+                string encryptedString = new StreamReader(cryptoStream).ReadToEnd();
+                StreamWriter fsDecrypted = new StreamWriter(decryptedMemoryStream);
+                fsDecrypted.Write(encryptedString);
+                fsDecrypted.Flush();
+            }
+
+            return decryptedMemoryStream;
+        }
     }
 }
