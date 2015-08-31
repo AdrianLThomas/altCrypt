@@ -28,7 +28,7 @@ namespace altCrypt.Core.x86.Encryption
                 throw new ArgumentNullException(nameof(file));
 
             var provider = Aes.Create();
-            byte[] key = _key.GenerateKey(KeySize._128Bit);
+            byte[] key = _key.GenerateBlock(BlockSize._128Bit);
             ICryptoTransform encryptor = provider.CreateEncryptor(key, key);
 
             byte[] buffer = file.Data.ReadAll();

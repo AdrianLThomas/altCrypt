@@ -8,6 +8,6 @@ namespace altCrypt.Core.Encryption
 {
     public interface IKey
     {
-        byte[] GenerateKey(KeySize keySize);
+        byte[] GenerateBlock(BlockSize keySize);
     }
 }

@@ -26,7 +26,7 @@ namespace altCrypt.Core.Encryption
             _key = key;
         }
 
-        public byte[] GenerateKey(KeySize keySize)
+        public byte[] GenerateBlock(BlockSize keySize)
         {
             List<byte> byteList = new List<byte>();
             byteList.AddRange(_key);
