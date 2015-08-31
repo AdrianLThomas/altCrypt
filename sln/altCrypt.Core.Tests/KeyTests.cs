@@ -37,9 +37,10 @@ namespace altCrypt.Core.Tests
             //Arrange
             var key = new Key("password");
             const int expectedLength = 16;
+            const int blockSize = 128;
 
             //Act
-            byte[] block = key.GenerateBlock(BlockSize._128Bit);
+            byte[] block = key.GenerateBlock(blockSize);
             int actualLength = block.Length;
 
             //Assert

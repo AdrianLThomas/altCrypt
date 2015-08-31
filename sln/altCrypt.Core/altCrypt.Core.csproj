@@ -39,7 +39,6 @@
   <ItemGroup>
     <Compile Include="Encryption\IKey.cs" />
     <Compile Include="Encryption\Key.cs" />
-    <Compile Include="Encryption\BlockSizeEnum.cs" />
     <Compile Include="Extensions\StreamExtensions.cs" />
     <Compile Include="FileSystem\IFile.cs" />
     <Compile Include="Encryption\IEncryptor.cs" />

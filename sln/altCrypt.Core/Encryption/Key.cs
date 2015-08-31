@@ -24,10 +24,10 @@ namespace altCrypt.Core.Encryption
             _key = key;
         }
 
-        public byte[] GenerateBlock(BlockSize keySize)
+        public byte[] GenerateBlock(int blockSize)
         {
-            int keySizeInt = (int)keySize / 8;
-            int rem = keySizeInt - _key.Length;
+            int byteSize = (int)blockSize / 8;
+            int rem = byteSize - _key.Length;
 
             List<byte> byteList = new List<byte>(_key);
             byteList.AddRange(new byte[rem]);

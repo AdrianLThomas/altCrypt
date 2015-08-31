@@ -28,7 +28,7 @@ namespace altCrypt.Core.x86.Encryption
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
 
-            byte[] key = _key.GenerateBlock(BlockSize._128Bit);
+            byte[] key = _key.GenerateBlock(_encryptionProvider.BlockSize);
             ICryptoTransform encryptor = _encryptionProvider.CreateEncryptor(key, key);
 
             byte[] buffer = file.Data.ReadAll();
@@ -46,7 +46,7 @@ namespace altCrypt.Core.x86.Encryption
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
 
-            byte[] key = _key.GenerateBlock(BlockSize._128Bit);
+            byte[] key = _key.GenerateBlock(_encryptionProvider.BlockSize);
             ICryptoTransform decryptor = _encryptionProvider.CreateDecryptor(key, key);
 
             var decryptedMemoryStream = new MemoryStream();
