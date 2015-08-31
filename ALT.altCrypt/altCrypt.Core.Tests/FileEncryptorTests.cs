@@ -1,7 +1,6 @@
 ﻿using altCrypt.Core.Encryption;
 using altCrypt.Core.Extensions;
 using altCrypt.Core.FileSystem;
-using altCrypt.Core.x86;
 using altCrypt.Core.x86.Encryption;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

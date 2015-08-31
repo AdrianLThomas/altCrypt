@@ -1,12 +1,9 @@
-﻿using altCrypt.Core.FileSystem;
+﻿using altCrypt.Core.Encryption;
+using altCrypt.Core.Extensions;
+using altCrypt.Core.FileSystem;
 using System;
 using System.IO;
 using System.Security.Cryptography;
-using System.Text;
-using System.Linq;
-using System.Collections.Generic;
-using altCrypt.Core.Extensions;
-using altCrypt.Core.Encryption;
 
 namespace altCrypt.Core.x86.Encryption
 {
