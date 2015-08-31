@@ -20,7 +20,7 @@ namespace altCrypt.Core.Tests
         [TestInitialize]
         public void Initialise()
         {
-            _fileEncryptor = new FileEncryptor(new Key("password")); //TODO - mock this
+            _fileEncryptor = new FileEncryptor(new Key("password"));
             _testStream = GetTestStream();
             _file = Mock.Of<IFile>(m => m.Data == _testStream);
         }
