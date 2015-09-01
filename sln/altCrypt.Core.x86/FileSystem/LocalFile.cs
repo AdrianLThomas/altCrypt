@@ -38,8 +38,6 @@ namespace altCrypt.Core.x86.FileSystem
                 throw new ArgumentNullException(nameof(stream));
             if (!stream.CanRead)
                 throw new ArgumentException("Can't read from stream");
-            if (!Data.CanWrite)
-                throw new InvalidOperationException($"Can't write to file: {_path}");
                 
             Data.SetLength(0);
             stream.CopyTo(Data);

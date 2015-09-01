@@ -1,7 +1,9 @@
 ﻿using altCrypt.Core.FileSystem;
 using altCrypt.Core.x86.FileSystem;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
+using System.IO;
 
 namespace altCrypt.Core.Tests.x86.FileSystem
 {
@@ -23,10 +25,29 @@ namespace altCrypt.Core.Tests.x86.FileSystem
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void Write_ThrowsInvalidOperationException_WhenFileDataIsntWritable()
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Write_ThrowsArgumentNullException_WhenStreamIsNull()
         {
-            throw new NotImplementedException();
+            //Arrange
+            var file = new LocalFile(@"C:\TestPath");
+
+            //Act
+            file.Write(null); //Exception
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Write_ThrowsArgumentException_WhenStreamIsntReadable()
+        {
+            //Arrange
+            Mock<Stream> streamMock = new Mock<Stream>();
+            streamMock.Setup(m => m.CanRead).Returns(false);
+
+            Stream stream = streamMock.Object;
+            var file = new LocalFile(@"C:\TestPath");
+
+            //Act
+            file.Write(stream); //Exception
         }
     }
 }
