@@ -7,12 +7,12 @@ using System.Security.Cryptography;
 
 namespace altCrypt.Core.x86.Encryption
 {
-    public class FileEncryptor : IEncryptor
+    public class StreamEncryptor : IEncryptor
     {
         private readonly IKey _key;
         private readonly SymmetricAlgorithm _encryptionProvider;
 
-        public FileEncryptor(IKey key, SymmetricAlgorithm encryptionProvider)
+        public StreamEncryptor(IKey key, SymmetricAlgorithm encryptionProvider)
         {
             if (key == null)
                 throw new ArgumentNullException(nameof(key));

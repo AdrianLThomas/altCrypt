@@ -18,7 +18,7 @@ namespace altCrypt.Client
         {
             IKey key = new Key("Pass@w0rd1");
             SymmetricAlgorithm encryptionProvider = new AesCryptoServiceProvider();
-            IEncryptor encryptor = new FileEncryptor(key, encryptionProvider);
+            IEncryptor encryptor = new StreamEncryptor(key, encryptionProvider);
 
             ////Encrypt
             //{

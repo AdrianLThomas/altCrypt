@@ -13,7 +13,7 @@ using IFileStream = altCrypt.Core.FileSystem.IFile<System.IO.Stream>;
 namespace altCrypt.Core.x86.Encryption.UnitTests
 {
     [TestClass]
-    public class FileEncryptorTests
+    public class StreamEncryptorTests
     {
         //TODO - This is the test string encrypted with AES - needs refactoring to not depend on AES.
         private readonly byte[] _encryptedData = new byte[] { 85, 165, 12, 76, 67, 80, 153, 148, 245, 179, 39, 249, 129, 61, 110, 46, 1, 118, 7, 109, 252, 164, 24, 178, 204, 110, 42, 109, 225, 123, 176, 157, 225, 177, 35, 20, 224, 231, 137, 242, 185, 116, 248, 214, 143, 31, 49, 171 };
@@ -21,7 +21,7 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
 
         private SymmetricAlgorithm _encryptionProvider;
         private IKey _key;
-        private FileEncryptor _fileEncryptor;
+        private StreamEncryptor _streamEncryptor;
         private IFileStream _unencryptedFile;
         private IFileStream _encryptedFile;
 
@@ -30,7 +30,7 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
         {
             _encryptionProvider = new AesCryptoServiceProvider();
             _key = Mock.Of<IKey>();
-            _fileEncryptor = new FileEncryptor(new Key("password"), _encryptionProvider);
+            _streamEncryptor = new StreamEncryptor(new Key("password"), _encryptionProvider);
             _unencryptedFile = Mock.Of<IFileStream>(m => m.Data == GetUnencryptedTestStream());
             _encryptedFile = Mock.Of<IFileStream>(m => m.Data == GetEncryptedTestStream());
         }
@@ -39,21 +39,21 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_ThrowsArgumentNullException_WhenKeyIsNull()
         {
-            new FileEncryptor(null, _encryptionProvider);
+            new StreamEncryptor(null, _encryptionProvider);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_ThrowsArgumentNullException_WhenEncryptionProviderIsNull()
         {
-            new FileEncryptor(_key, null);
+            new StreamEncryptor(_key, null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void EncryptToStream_ThrowsArgumentNullException_WhenFileParamIsNull()
         {
-            _fileEncryptor.EncryptToStream(null);
+            _streamEncryptor.EncryptToStream(null);
         }
 
         [TestMethod]
@@ -64,7 +64,7 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
             Stream stream;
             using (GetUnencryptedTestStream())
             {
-                stream = _fileEncryptor.EncryptToStream(_unencryptedFile);
+                stream = _streamEncryptor.EncryptToStream(_unencryptedFile);
             }
 
             //Assert
@@ -81,7 +81,7 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
             //Act
             using (GetUnencryptedTestStream())
             {
-                using (Stream encryptedResultStream = _fileEncryptor.EncryptToStream(_unencryptedFile))
+                using (Stream encryptedResultStream = _streamEncryptor.EncryptToStream(_unencryptedFile))
                 {
                     actual = encryptedResultStream.ToByteArray();
                 }
@@ -95,7 +95,7 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
         [ExpectedException(typeof(ArgumentNullException))]
         public void DecryptToStream_ThrowsArgumentNullException_WhenFileParamIsNull()
         {
-            _fileEncryptor.DecryptToStream(null);
+            _streamEncryptor.DecryptToStream(null);
         }
 
         [TestMethod]
@@ -106,7 +106,7 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
             byte[] actual;
 
             //Act
-            using (Stream decryptedStream = _fileEncryptor.DecryptToStream(_encryptedFile))
+            using (Stream decryptedStream = _streamEncryptor.DecryptToStream(_encryptedFile))
             {
                 actual = decryptedStream.ToByteArray();
             }
@@ -119,7 +119,7 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
         [ExpectedException(typeof(ArgumentNullException))]
         public void Encrypt_ThrowsArgumentNullException_WhenFileParamIsNull()
         {
-            _fileEncryptor.Encrypt(null);
+            _streamEncryptor.Encrypt(null);
         }
 
         [TestMethod]
@@ -136,7 +136,7 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
             byte[] actual;
 
             //Act
-            _fileEncryptor.Encrypt(fileToEncrypt);
+            _streamEncryptor.Encrypt(fileToEncrypt);
             actual = fileToEncrypt.Data.ToByteArray();
 
             //Assert
