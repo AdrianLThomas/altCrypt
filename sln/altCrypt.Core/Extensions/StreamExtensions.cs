@@ -19,5 +19,16 @@ namespace altCrypt.Core.Extensions
                 return ms.ToArray();
             }
         }
+
+        public static MemoryStream ToMemoryStream(this Stream input)
+        {
+            var memStream = new MemoryStream();
+
+            input.Seek(0, SeekOrigin.Begin);
+            input.CopyTo(memStream);
+            memStream.Flush();
+
+            return memStream;
+        }
     }
 }

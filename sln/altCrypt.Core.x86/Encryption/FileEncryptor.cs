@@ -23,7 +23,7 @@ namespace altCrypt.Core.x86.Encryption
             _encryptionProvider = encryptionProvider;
         }
 
-        public Stream EncryptToStream(IFile file)
+        public Stream EncryptToStream(IFile<Stream> file)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
@@ -41,7 +41,7 @@ namespace altCrypt.Core.x86.Encryption
             return memoryStream;
         }
 
-        public Stream DecryptToStream(IFile file)
+        public Stream DecryptToStream(IFile<Stream> file)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
@@ -63,12 +63,15 @@ namespace altCrypt.Core.x86.Encryption
             return decryptedMemoryStream;
         }
 
-        public void Encrypt(IFile file)
+        public void Encrypt(IFile<Stream> file)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
 
-            throw new NotImplementedException();
+            using (Stream encryptedStream = this.EncryptToStream(file))
+            {
+                file.Write(encryptedStream);
+            }
         }
     }
 }

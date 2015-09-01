@@ -4,17 +4,9 @@ using System.IO;
 
 namespace altCrypt.Core.x86.FileSystem
 {
-    public class LocalFile : IFile
+    public class LocalFile : IFile<FileStream>
     {
         private readonly string _path;
-
-        public Stream Data
-        {
-            get
-            {
-                return File.OpenRead(_path);
-            }
-        }
 
         public string Name
         {
@@ -24,12 +16,34 @@ namespace altCrypt.Core.x86.FileSystem
             }
         }
 
+        public FileStream Data
+        {
+            get
+            {
+                return File.OpenRead(_path);
+            }
+        }
+
         public LocalFile(string path)
         {
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentNullException(nameof(path));
 
             _path = path;
+        }
+
+        public void Write(Stream stream)
+        {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+            if (!stream.CanRead)
+                throw new ArgumentException("Can't read from stream");
+            if (!Data.CanWrite)
+                throw new InvalidOperationException($"Can't write to file: {_path}");
+                
+            Data.SetLength(0);
+            stream.CopyTo(Data);
+            Data.Flush();
         }
     }
 }

@@ -20,40 +20,41 @@ namespace altCrypt.Client
             SymmetricAlgorithm encryptionProvider = new AesCryptoServiceProvider();
             IEncryptor encryptor = new FileEncryptor(key, encryptionProvider);
 
-            //Encrypt
-            {
-                IFile file = new LocalFile(@"C:\temp\Test.txt");
-                using (Stream encryptedContent = encryptor.EncryptToStream(file))
-                {
-                    using (var newFile = File.Create(@"C:\temp\Test.encrypted.txt"))
-                    {
-                        var mem = (MemoryStream)encryptedContent;
-                        byte[] bytes = mem.ToArray();
+            ////Encrypt
+            //{
+            //    IFile file = new LocalFile(@"C:\temp\Test.txt");
+            //    using (Stream encryptedContent = encryptor.EncryptToStream(file))
+            //    {
+            //        using (var newFile = File.Create(@"C:\temp\Test.encrypted.txt"))
+            //        {
+            //            var mem = (MemoryStream)encryptedContent;
+            //            byte[] bytes = mem.ToArray();
 
-                        newFile.Write(bytes, 0, bytes.Length);
-                    }
-                }
-            }
+            //            newFile.Write(bytes, 0, bytes.Length);
+            //        }
+            //    }
+            //}
 
-            //Decrypt
-            {
-                IFile file = new LocalFile(@"C:\temp\Test.encrypted.txt");
-                using (Stream decryptedContent = encryptor.DecryptToStream(file))
-                {
-                    using (var newFile = File.Create(@"C:\temp\Test.decrypted.txt"))
-                    {
-                        var mem = (MemoryStream)decryptedContent;
-                        byte[] bytes = mem.ToArray();
+            ////Decrypt
+            //{
+            //    IFile file = new LocalFile(@"C:\temp\Test.encrypted.txt");
+            //    using (Stream decryptedContent = encryptor.DecryptToStream(file))
+            //    {
+            //        using (var newFile = File.Create(@"C:\temp\Test.decrypted.txt"))
+            //        {
+            //            var mem = (MemoryStream)decryptedContent;
+            //            byte[] bytes = mem.ToArray();
 
-                        newFile.Write(bytes, 0, bytes.Length);
-                    }
-                }
-            }
+            //            newFile.Write(bytes, 0, bytes.Length);
+            //        }
+            //    }
+            //}
 
             //Ideal usage:
-            //LocalFile file = new LocalFile(@"C:\temp\Test.txt");
-            //encryptor.EncryptToStream(file);
-            //file.Encrypt();
+            {
+                IFile<Stream> file = new LocalFile(@"C:\temp\Test.txt");
+                encryptor.Encrypt(file);
+            }
         }
     }
 }

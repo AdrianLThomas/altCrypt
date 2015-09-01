@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using IFileStream = altCrypt.Core.FileSystem.IFile<System.IO.Stream>;
 
 namespace altCrypt.Core.Tests
 {
@@ -21,8 +22,8 @@ namespace altCrypt.Core.Tests
         private SymmetricAlgorithm _encryptionProvider;
         private IKey _key;
         private FileEncryptor _fileEncryptor;
-        private IFile _unencryptedFile;
-        private IFile _encryptedFile;
+        private IFileStream _unencryptedFile;
+        private IFileStream _encryptedFile;
 
         [TestInitialize]
         public void Initialise()
@@ -30,8 +31,8 @@ namespace altCrypt.Core.Tests
             _encryptionProvider = new AesCryptoServiceProvider();
             _key = Mock.Of<IKey>();
             _fileEncryptor = new FileEncryptor(new Key("password"), _encryptionProvider);
-            _unencryptedFile = Mock.Of<IFile>(m => m.Data == GetUnencryptedTestStream());
-            _encryptedFile = Mock.Of<IFile>(m => m.Data == GetEncryptedTestStream());
+            _unencryptedFile = Mock.Of<IFileStream>(m => m.Data == GetUnencryptedTestStream());
+            _encryptedFile = Mock.Of<IFileStream>(m => m.Data == GetEncryptedTestStream());
         }
 
         [TestMethod]
@@ -125,7 +126,7 @@ namespace altCrypt.Core.Tests
         public void Encrypt_EncryptsStream_WhenFileParamIsValid()
         {
             //Arrange
-            var fileToEncrypt = Mock.Of<IFile>(m => m.Data == GetUnencryptedTestStream());
+            var fileToEncrypt = Mock.Of<IFileStream>(m => m.Data == GetUnencryptedTestStream());
             byte[] expected = _encryptedData;
             byte[] actual;
 

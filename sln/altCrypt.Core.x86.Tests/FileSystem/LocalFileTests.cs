@@ -12,24 +12,21 @@ namespace altCrypt.Core.Tests.x86.FileSystem
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_ThrowsArgumentNullException_WhenPathIsEmpty()
         {
-            //Arrange
-            //Act
-            var file = new LocalFile(string.Empty);
-
-            //Assert
-            //Exception
+            new LocalFile(string.Empty);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_ThrowsArgumentNullException_WhenPathIsNull()
         {
-            //Arrange
-            //Act
-            var file = new LocalFile(null);
+            new LocalFile(null);
+        }
 
-            //Assert
-            //Exception
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Write_ThrowsInvalidOperationException_WhenFileDataIsntWritable()
+        {
+            throw new NotImplementedException();
         }
     }
 }
