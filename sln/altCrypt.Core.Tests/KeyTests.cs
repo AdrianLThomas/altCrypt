@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace altCrypt.Core.Tests
+namespace altCrypt.Core.UnitTests
 {
     [TestClass]
     public class KeyTests

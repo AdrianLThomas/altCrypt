@@ -5,7 +5,7 @@ using Moq;
 using System;
 using System.IO;
 
-namespace altCrypt.Core.Tests.x86.FileSystem
+namespace altCrypt.Core.UnitTests.x86.FileSystem
 {
     [TestClass]
     public class LocalFileTests
