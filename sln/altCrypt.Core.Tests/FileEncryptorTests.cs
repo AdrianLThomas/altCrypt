@@ -123,8 +123,13 @@ namespace altCrypt.Core.Tests
         }
 
         [TestMethod]
-        public void Encrypt_EncryptsStream_WhenFileParamIsValid()
+        public void Encrypt_EncryptsStream_WhenFileParamIsValid() 
         {
+            //TODO - not convinced this test makes sense / code needs refactoring.
+            //Tests currently depend on certain encryption. I need to test that a write is successful
+            //and I need to test that something can be encrypted
+            //but I don't need to test if the write has the expected encrypted data... that would be an integration test.
+
             //Arrange
             var fileToEncrypt = Mock.Of<IFileStream>(m => m.Data == GetUnencryptedTestStream());
             byte[] expected = _encryptedData;
