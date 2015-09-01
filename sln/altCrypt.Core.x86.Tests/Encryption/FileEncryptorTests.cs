@@ -10,7 +10,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using IFileStream = altCrypt.Core.FileSystem.IFile<System.IO.Stream>;
 
-namespace altCrypt.Core.UnitTests
+namespace altCrypt.Core.x86.Encryption.UnitTests
 {
     [TestClass]
     public class FileEncryptorTests
