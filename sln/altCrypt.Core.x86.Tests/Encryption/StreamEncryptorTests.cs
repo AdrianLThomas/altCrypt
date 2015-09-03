@@ -16,7 +16,7 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
     [TestClass]
     public class StreamEncryptorTests
     {
-        private readonly byte[] _uncryptedData = { 1, 2, 3 };
+        private readonly byte[] _uncryptedData = { 1, 2, 3, 0, 0, 0, 0, 0 };
         private readonly byte[] _encryptedData = { 0, 0, 0, 0, 0, 3, 2, 1 };
 
         private SymmetricAlgorithm _encryptionProvider;
@@ -36,6 +36,8 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
 
             var encryptionMock = new Mock<SymmetricAlgorithm>();
             encryptionMock.Setup(m => m.CreateEncryptor(It.IsAny<byte[]>(), It.IsAny<byte[]>()))
+                          .Returns(cryptoTransform.Object);
+            encryptionMock.Setup(m => m.CreateDecryptor(It.IsAny<byte[]>(), It.IsAny<byte[]>()))
                           .Returns(cryptoTransform.Object);
 
             _encryptionProvider = encryptionMock.Object;
