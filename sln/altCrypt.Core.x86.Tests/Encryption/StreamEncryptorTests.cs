@@ -128,19 +128,18 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
         }
 
         [TestMethod]
-        public void Encrypt_EncryptsStream_WhenFileParamIsValid()
+        public void Encrypt_CallsWriteOnFile_WhenFileParamIsValid()
         {
             //Arrange
-            var fileToEncrypt = Mock.Of<IFileStream>(m => m.Data == GetUnencryptedTestStream());
-            byte[] expected = _encryptedData;
-            byte[] actual;
+            var fileMock = new Mock<IFileStream>();
+            fileMock.Setup(m => m.Data).Returns(GetUnencryptedTestStream());
+            IFileStream fileToEncrypt = fileMock.Object;
 
             //Act
             _streamEncryptor.Encrypt(fileToEncrypt);
-            actual = fileToEncrypt.Data.ToByteArray();
 
             //Assert
-            Assert.IsTrue(actual.SequenceEqual(expected));
+            fileMock.Verify(m => m.Write(It.IsAny<Stream>()));
         }
 
 
