@@ -142,6 +142,19 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
             fileMock.Verify(m => m.Write(It.IsAny<Stream>()));
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Decrypt_ThrowsArgumentNullException_WhenFileParamIsNull()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void Decrypt_CallsWriteOnFile_WhenFileParamIsValid()
+        {
+            Assert.Fail();
+        }
+
 
         private MemoryStream GetUnencryptedTestStream()
         {
