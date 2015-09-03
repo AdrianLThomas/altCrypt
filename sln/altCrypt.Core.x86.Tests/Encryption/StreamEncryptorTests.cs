@@ -5,6 +5,7 @@ using altCrypt.Core.x86.Encryption;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -15,9 +16,8 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
     [TestClass]
     public class StreamEncryptorTests
     {
-        //TODO - This is the test string encrypted with AES - needs refactoring to not depend on AES.
-        private readonly byte[] _encryptedData = new byte[] { 85, 165, 12, 76, 67, 80, 153, 148, 245, 179, 39, 249, 129, 61, 110, 46, 1, 118, 7, 109, 252, 164, 24, 178, 204, 110, 42, 109, 225, 123, 176, 157, 225, 177, 35, 20, 224, 231, 137, 242, 185, 116, 248, 214, 143, 31, 49, 171 };
-        private readonly byte[] _decryptedData = System.Text.Encoding.ASCII.GetBytes("Some secret text I want to encrypt");
+        private readonly byte[] _uncryptedData = { 1, 2, 3 };
+        private readonly byte[] _encryptedData = { 0, 0, 0, 0, 0, 3, 2, 1 };
 
         private SymmetricAlgorithm _encryptionProvider;
         private IKey _key;
@@ -28,7 +28,17 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
         [TestInitialize]
         public void Initialise()
         {
-            _encryptionProvider = new AesCryptoServiceProvider();
+            var cryptoTransform = new Mock<ICryptoTransform>();
+            cryptoTransform.Setup(m => m.InputBlockSize).Returns(8);
+            cryptoTransform.Setup(m => m.OutputBlockSize).Returns(8);
+            cryptoTransform.Setup(m => m.TransformFinalBlock(It.IsAny<byte[]>(), It.IsAny<int>(), It.IsAny<int>()))
+                           .Returns<byte[], int, int>((input, offset, count) => input.Reverse().ToArray());
+
+            var encryptionMock = new Mock<SymmetricAlgorithm>();
+            encryptionMock.Setup(m => m.CreateEncryptor(It.IsAny<byte[]>(), It.IsAny<byte[]>()))
+                          .Returns(cryptoTransform.Object);
+
+            _encryptionProvider = encryptionMock.Object;
             _key = Mock.Of<IKey>();
             _streamEncryptor = new StreamEncryptor(new Key("password"), _encryptionProvider);
             _unencryptedFile = Mock.Of<IFileStream>(m => m.Data == GetUnencryptedTestStream());
@@ -61,11 +71,7 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
         {
             //Arrange
             //Act
-            Stream stream;
-            using (GetUnencryptedTestStream())
-            {
-                stream = _streamEncryptor.EncryptToStream(_unencryptedFile);
-            }
+            Stream stream = _streamEncryptor.EncryptToStream(_unencryptedFile);
 
             //Assert
             Assert.IsNotNull(stream);
@@ -75,16 +81,13 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
         public void EncryptToStream_ReturnsExpectedEncryptedStream_WhenFileParamIsValid()
         {
             //Arrange
-            byte[] expected = _encryptedData; //AES Encrypted: GetTestPassword()
+            byte[] expected = _encryptedData;
             byte[] actual;
 
             //Act
-            using (GetUnencryptedTestStream())
+            using (Stream encryptedResultStream = _streamEncryptor.EncryptToStream(_unencryptedFile))
             {
-                using (Stream encryptedResultStream = _streamEncryptor.EncryptToStream(_unencryptedFile))
-                {
-                    actual = encryptedResultStream.ToByteArray();
-                }
+                actual = encryptedResultStream.ToByteArray();
             }
 
             //Assert
@@ -102,7 +105,7 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
         public void DecryptToStream_ReturnsExpectedDecryptedStream_WhenFileParamIsValid()
         {
             //Arrange
-            byte[] expected = _decryptedData;
+            byte[] expected = _uncryptedData;
             byte[] actual;
 
             //Act
@@ -123,13 +126,8 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
         }
 
         [TestMethod]
-        public void Encrypt_EncryptsStream_WhenFileParamIsValid() 
+        public void Encrypt_EncryptsStream_WhenFileParamIsValid()
         {
-            //TODO - not convinced this test makes sense / code needs refactoring.
-            //Tests currently depend on certain encryption. I need to test that a write is successful
-            //and I need to test that something can be encrypted
-            //but I don't need to test if the write has the expected encrypted data... that would be an integration test.
-
             //Arrange
             var fileToEncrypt = Mock.Of<IFileStream>(m => m.Data == GetUnencryptedTestStream());
             byte[] expected = _encryptedData;
@@ -146,7 +144,7 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
 
         private MemoryStream GetUnencryptedTestStream()
         {
-            byte[] bytes = _decryptedData;
+            byte[] bytes = _uncryptedData;
 
             var memStream = new MemoryStream();
             memStream.Write(bytes, 0, bytes.Length);

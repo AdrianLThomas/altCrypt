@@ -30,7 +30,8 @@ namespace altCrypt.Core.Encryption
             int rem = byteSize - _key.Length;
 
             List<byte> byteList = new List<byte>(_key);
-            byteList.AddRange(new byte[rem]);
+            for(int i = 0; i < rem; ++i)
+                byteList.Add(0);
 
             return byteList.ToArray();
         }
