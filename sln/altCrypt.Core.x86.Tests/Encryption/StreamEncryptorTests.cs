@@ -16,8 +16,8 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
     [TestClass]
     public class StreamEncryptorTests
     {
-        private readonly byte[] _uncryptedData = { 1, 2, 3, 0, 0, 0, 0, 0 };
-        private readonly byte[] _encryptedData = { 0, 0, 0, 0, 0, 3, 2, 1 };
+        private readonly byte[] _unencryptedData = { 1, 2, 3 };
+        private readonly byte[] _encryptedData = { 168, 227, 219, 162, 143, 249, 34, 53, 145, 171, 47, 72, 183, 76, 190, 185 };
 
         private SymmetricAlgorithm _encryptionProvider;
         private IKey _key;
@@ -28,19 +28,7 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
         [TestInitialize]
         public void Initialise()
         {
-            var cryptoTransform = new Mock<ICryptoTransform>();
-            cryptoTransform.Setup(m => m.InputBlockSize).Returns(8);
-            cryptoTransform.Setup(m => m.OutputBlockSize).Returns(8);
-            cryptoTransform.Setup(m => m.TransformFinalBlock(It.IsAny<byte[]>(), It.IsAny<int>(), It.IsAny<int>()))
-                           .Returns<byte[], int, int>((input, offset, count) => input.Reverse().ToArray());
-
-            var encryptionMock = new Mock<SymmetricAlgorithm>();
-            encryptionMock.Setup(m => m.CreateEncryptor(It.IsAny<byte[]>(), It.IsAny<byte[]>()))
-                          .Returns(cryptoTransform.Object);
-            encryptionMock.Setup(m => m.CreateDecryptor(It.IsAny<byte[]>(), It.IsAny<byte[]>()))
-                          .Returns(cryptoTransform.Object);
-
-            _encryptionProvider = encryptionMock.Object;
+            _encryptionProvider = Rijndael.Create();
             _key = Mock.Of<IKey>();
             _streamEncryptor = new StreamEncryptor(new Key("password"), _encryptionProvider);
             _unencryptedFile = Mock.Of<IFileStream>(m => m.Data == GetUnencryptedTestStream());
@@ -107,7 +95,7 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
         public void DecryptToStream_ReturnsExpectedDecryptedStream_WhenFileParamIsValid()
         {
             //Arrange
-            byte[] expected = _uncryptedData;
+            byte[] expected = _unencryptedData;
             byte[] actual;
 
             //Act
@@ -133,7 +121,7 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
             //Arrange
             var fileMock = new Mock<IFileStream>();
             fileMock.Setup(m => m.Data).Returns(GetUnencryptedTestStream());
-            IFileStream fileToEncrypt = fileMock.Object;
+            IFileStream fileToEncrypt = _unencryptedFile;
 
             //Act
             _streamEncryptor.Encrypt(fileToEncrypt);
@@ -167,7 +155,7 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
 
         private MemoryStream GetUnencryptedTestStream()
         {
-            byte[] bytes = _uncryptedData;
+            byte[] bytes = _unencryptedData;
 
             var memStream = new MemoryStream();
             memStream.Write(bytes, 0, bytes.Length);
