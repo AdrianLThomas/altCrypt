@@ -11,24 +11,15 @@ namespace altCrypt.Core.UnitTests
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_ThrowsArgumentNullException_WhenEmptyByteArrayPassed()
         {
-            //Arrange
-            byte[] key = null;
-
             //Act
-            new Key(key);
-
-            //Assert
+            new Key((byte[]) null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_ThrowsArgumentNullException_WhenEmptyStringPassed()
         {
-            //Arrange
-            //Act
             new Key(string.Empty);
-
-            //Assert
         }
 
         [TestMethod]

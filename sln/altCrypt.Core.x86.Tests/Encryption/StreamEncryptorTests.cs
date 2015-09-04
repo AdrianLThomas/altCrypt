@@ -1,17 +1,15 @@
-﻿using altCrypt.Core.Encryption;
-using altCrypt.Core.Extensions;
-using altCrypt.Core.FileSystem;
-using altCrypt.Core.x86.Encryption;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using altCrypt.Core.Encryption;
+using altCrypt.Core.Extensions;
+using altCrypt.Core.x86.Encryption;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using IFileStream = altCrypt.Core.FileSystem.IFile<System.IO.Stream>;
 
-namespace altCrypt.Core.x86.Encryption.UnitTests
+namespace altCrypt.Core.x86.UnitTests.Encryption
 {
     [TestClass]
     public class StreamEncryptorTests

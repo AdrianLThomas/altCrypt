@@ -1,11 +1,10 @@
-﻿using altCrypt.Core.FileSystem;
+﻿using System;
+using System.IO;
 using altCrypt.Core.x86.FileSystem;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
-using System.IO;
 
-namespace altCrypt.Core.UnitTests.x86.FileSystem
+namespace altCrypt.Core.x86.UnitTests.FileSystem
 {
     [TestClass]
     public class LocalFileTests
