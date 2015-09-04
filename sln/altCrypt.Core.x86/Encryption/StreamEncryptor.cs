@@ -31,7 +31,7 @@ namespace altCrypt.Core.x86.Encryption
             byte[] key = _key.GenerateBlock(_encryptionProvider.BlockSize);
             ICryptoTransform encryptor = _encryptionProvider.CreateEncryptor(key, key);
 
-            byte[] buffer = file.Data.ToByteArray();
+            byte[] buffer = file.Read().ToByteArray();
 
             var memoryStream = new MemoryStream();
             var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write);
@@ -51,9 +51,10 @@ namespace altCrypt.Core.x86.Encryption
 
             var decryptedMemoryStream = new MemoryStream();
 
-            using (var cryptoStream = new CryptoStream(file.Data, decryptor, CryptoStreamMode.Read))
+            var fileData = file.Read();
+            using (var cryptoStream = new CryptoStream(fileData, decryptor, CryptoStreamMode.Read))
             {
-                file.Data.Seek(0, SeekOrigin.Begin);
+                fileData.Seek(0, SeekOrigin.Begin);
                 string encryptedString = new StreamReader(cryptoStream).ReadToEnd();
                 StreamWriter fsDecrypted = new StreamWriter(decryptedMemoryStream);
                 fsDecrypted.Write(encryptedString);

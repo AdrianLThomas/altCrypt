@@ -7,10 +7,9 @@ namespace altCrypt.Core.x86.FileSystem
     public class LocalFile : IFile<FileStream>
     {
         private readonly string _path;
+        private FileStream _data;
 
         public string Name => Path.GetFileName(_path);
-
-        public FileStream Data => File.OpenRead(_path);
 
         public LocalFile(string path)
         {
@@ -26,10 +25,17 @@ namespace altCrypt.Core.x86.FileSystem
                 throw new ArgumentNullException(nameof(stream));
             if (!stream.CanRead)
                 throw new ArgumentException("Can't read from stream");
-                
-            Data.SetLength(0);
-            stream.CopyTo(Data);
-            Data.Flush();
+
+            GetData().SetLength(0);
+            stream.CopyTo(_data);
+            GetData().Flush();
+        }
+
+        public FileStream Read() => GetData();
+
+        private FileStream GetData()
+        {
+            return _data ?? (_data = File.OpenRead(_path));
         }
     }
 }

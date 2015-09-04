@@ -30,8 +30,8 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
 
             _key = Mock.Of<IKey>();
             _streamEncryptor = new StreamEncryptor(new Key("password"), _encryptionProvider);
-            _unencryptedFile = Mock.Of<IFileStream>(m => m.Data == GetUnencryptedTestStream());
-            _encryptedFile = Mock.Of<IFileStream>(m => m.Data == GetEncryptedTestStream());
+            _unencryptedFile = Mock.Of<IFileStream>(m => m.Read() == GetUnencryptedTestStream());
+            _encryptedFile = Mock.Of<IFileStream>(m => m.Read() == GetEncryptedTestStream());
         }
 
         [TestMethod]
@@ -119,7 +119,7 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
         {
             //Arrange
             var fileMock = new Mock<IFileStream>();
-            fileMock.Setup(m => m.Data).Returns(GetUnencryptedTestStream);
+            fileMock.Setup(m => m.Read()).Returns(GetUnencryptedTestStream);
 
             //Act
             _streamEncryptor.Encrypt(fileMock.Object);
@@ -140,7 +140,7 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
         {
             //Arrange
             var fileMock = new Mock<IFileStream>();
-            fileMock.Setup(m => m.Data).Returns(GetEncryptedTestStream);
+            fileMock.Setup(m => m.Read()).Returns(GetEncryptedTestStream);
 
             //Act
             _streamEncryptor.Decrypt(fileMock.Object);
