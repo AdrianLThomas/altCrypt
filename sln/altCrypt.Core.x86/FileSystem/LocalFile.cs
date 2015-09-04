@@ -8,21 +8,9 @@ namespace altCrypt.Core.x86.FileSystem
     {
         private readonly string _path;
 
-        public string Name
-        {
-            get
-            { 
-                return Path.GetFileName(_path);
-            }
-        }
+        public string Name => Path.GetFileName(_path);
 
-        public FileStream Data
-        {
-            get
-            {
-                return File.OpenRead(_path);
-            }
-        }
+        public FileStream Data => File.OpenRead(_path);
 
         public LocalFile(string path)
         {
