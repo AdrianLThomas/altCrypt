@@ -73,5 +73,16 @@ namespace altCrypt.Core.x86.Encryption
                 file.Write(encryptedStream);
             }
         }
+
+        public void Decrypt(IFile<Stream> file)
+        {
+            if (file == null)
+                throw new ArgumentNullException(nameof(file));
+
+            using (Stream decryptedStream = this.DecryptToStream(file))
+            {
+                file.Write(decryptedStream);
+            }
+        }
     }
 }
