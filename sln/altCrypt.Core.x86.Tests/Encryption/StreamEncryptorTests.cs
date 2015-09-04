@@ -28,7 +28,8 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
         [TestInitialize]
         public void Initialise()
         {
-            _encryptionProvider = Rijndael.Create();
+            _encryptionProvider = Aes.Create();
+
             _key = Mock.Of<IKey>();
             _streamEncryptor = new StreamEncryptor(new Key("password"), _encryptionProvider);
             _unencryptedFile = Mock.Of<IFileStream>(m => m.Data == GetUnencryptedTestStream());
@@ -120,11 +121,10 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
         {
             //Arrange
             var fileMock = new Mock<IFileStream>();
-            fileMock.Setup(m => m.Data).Returns(GetUnencryptedTestStream());
-            IFileStream fileToEncrypt = _unencryptedFile;
+            fileMock.Setup(m => m.Data).Returns(GetUnencryptedTestStream);
 
             //Act
-            _streamEncryptor.Encrypt(fileToEncrypt);
+            _streamEncryptor.Encrypt(fileMock.Object);
 
             //Assert
             fileMock.Verify(m => m.Write(It.IsAny<Stream>()));
@@ -143,10 +143,9 @@ namespace altCrypt.Core.x86.Encryption.UnitTests
             //Arrange
             var fileMock = new Mock<IFileStream>();
             fileMock.Setup(m => m.Data).Returns(GetEncryptedTestStream);
-            IFileStream fileToEncrypt = fileMock.Object;
 
             //Act
-            _streamEncryptor.Decrypt(fileToEncrypt);
+            _streamEncryptor.Decrypt(fileMock.Object);
 
             //Assert
             fileMock.Verify(m => m.Write(It.IsAny<Stream>()));
