@@ -7,12 +7,12 @@ using System.Security.Cryptography;
 
 namespace altCrypt.Core.x86.Encryption
 {
-    public class FileEncryptor : IEncryptor
+    public class StreamEncryptor : IEncryptor
     {
         private readonly IKey _key;
         private readonly SymmetricAlgorithm _encryptionProvider;
 
-        public FileEncryptor(IKey key, SymmetricAlgorithm encryptionProvider)
+        public StreamEncryptor(IKey key, SymmetricAlgorithm encryptionProvider)
         {
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
@@ -23,7 +23,7 @@ namespace altCrypt.Core.x86.Encryption
             _encryptionProvider = encryptionProvider;
         }
 
-        public Stream EncryptToStream(IFile file)
+        public Stream EncryptToStream(IFile<Stream> file)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
@@ -31,7 +31,7 @@ namespace altCrypt.Core.x86.Encryption
             byte[] key = _key.GenerateBlock(_encryptionProvider.BlockSize);
             ICryptoTransform encryptor = _encryptionProvider.CreateEncryptor(key, key);
 
-            byte[] buffer = file.Data.ReadAll();
+            byte[] buffer = file.Data.ToByteArray();
 
             var memoryStream = new MemoryStream();
             var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write);
@@ -41,7 +41,7 @@ namespace altCrypt.Core.x86.Encryption
             return memoryStream;
         }
 
-        public Stream DecryptToStream(IFile file)
+        public Stream DecryptToStream(IFile<Stream> file)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
@@ -61,6 +61,28 @@ namespace altCrypt.Core.x86.Encryption
             }
 
             return decryptedMemoryStream;
+        }
+
+        public void Encrypt(IFile<Stream> file)
+        {
+            if (file == null)
+                throw new ArgumentNullException(nameof(file));
+
+            using (Stream encryptedStream = this.EncryptToStream(file))
+            {
+                file.Write(encryptedStream);
+            }
+        }
+
+        public void Decrypt(IFile<Stream> file)
+        {
+            if (file == null)
+                throw new ArgumentNullException(nameof(file));
+
+            using (Stream decryptedStream = this.DecryptToStream(file))
+            {
+                file.Write(decryptedStream);
+            }
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using altCrypt.Core.FileSystem;
 using altCrypt.Core.x86.FileSystem;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
+using System.IO;
 
-namespace altCrypt.Core.Tests.x86.FileSystem
+namespace altCrypt.Core.UnitTests.x86.FileSystem
 {
     [TestClass]
     public class LocalFileTests
@@ -12,24 +14,40 @@ namespace altCrypt.Core.Tests.x86.FileSystem
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_ThrowsArgumentNullException_WhenPathIsEmpty()
         {
-            //Arrange
-            //Act
-            var file = new LocalFile(string.Empty);
-
-            //Assert
-            //Exception
+            new LocalFile(string.Empty);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_ThrowsArgumentNullException_WhenPathIsNull()
         {
-            //Arrange
-            //Act
-            var file = new LocalFile(null);
+            new LocalFile(null);
+        }
 
-            //Assert
-            //Exception
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Write_ThrowsArgumentNullException_WhenStreamIsNull()
+        {
+            //Arrange
+            var file = new LocalFile(@"C:\TestPath");
+
+            //Act
+            file.Write(null); //Exception
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Write_ThrowsArgumentException_WhenStreamIsntReadable()
+        {
+            //Arrange
+            Mock<Stream> streamMock = new Mock<Stream>();
+            streamMock.Setup(m => m.CanRead).Returns(false);
+
+            Stream stream = streamMock.Object;
+            var file = new LocalFile(@"C:\TestPath");
+
+            //Act
+            file.Write(stream); //Exception
         }
     }
 }
