@@ -16,6 +16,12 @@ namespace altCrypt.Client
             SymmetricAlgorithm encryptionProvider = new AesCryptoServiceProvider();
             IEncryptor encryptor = new StreamEncryptor(key, encryptionProvider);
 
+            ManipulateFile(encryptor);
+            ManipulateDirectory(encryptor);
+        }
+
+        private static void ManipulateFile(IEncryptor encryptor)
+        {
             IFile<Stream> file = new LocalFile(@"C:\temp\Test.txt");
             encryptor.Encrypt(file);
 
@@ -23,6 +29,16 @@ namespace altCrypt.Client
             Console.ReadKey();
 
             encryptor.Decrypt(file);
+        }
+
+        private static void ManipulateDirectory(IEncryptor encryptor)
+        {
+            //open directory (include subdirectories?)
+            //encrypt directory
+            //decrypt directory
+
+            //string[] directories = Directory.GetFiles(String.Empty, "*.*", SearchOption.AllDirectories);
+
         }
     }
 }

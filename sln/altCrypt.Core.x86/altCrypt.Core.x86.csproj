@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Encryption\StreamEncryptor.cs" />
+    <Compile Include="FileSystem\LocalDirectory.cs" />
     <Compile Include="FileSystem\LocalFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
