@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 
 namespace altCrypt.Core.x86.Encryption
 {
-    public class StreamEncryptor : IEncryptToStream, IEncryptFile
+    public class StreamEncryptor : IEncryptor
     {
         private readonly IKey _key;
         private readonly SymmetricAlgorithm _encryptionProvider;
