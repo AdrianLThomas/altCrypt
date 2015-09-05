@@ -23,43 +23,40 @@ namespace altCrypt.Core.x86.Encryption
             _encryptionProvider = encryptionProvider;
         }
 
-        public Stream EncryptToStream(IFile<Stream> file)
+        public void EncryptToStream(IFile<Stream> file, Stream outputStream)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
+            if (outputStream == null)
+                throw new ArgumentNullException(nameof(outputStream));
 
             byte[] key = _key.GenerateBlock(_encryptionProvider.BlockSize);
             ICryptoTransform encryptor = _encryptionProvider.CreateEncryptor(key, key);
 
             using (var stream = file.Read())
             {
-                var memoryStream = new MemoryStream();
-                var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write);
+                var cryptoStream = new CryptoStream(outputStream, encryptor, CryptoStreamMode.Write);
                 stream.CopyTo(cryptoStream);
                 cryptoStream.FlushFinalBlock();
-
-                return memoryStream;
             }
         }
 
-        public Stream DecryptToStream(IFile<Stream> file)
+        public void DecryptToStream(IFile<Stream> file, Stream outputStream)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
+            if (outputStream == null)
+                throw new ArgumentNullException(nameof(outputStream));
 
             byte[] key = _key.GenerateBlock(_encryptionProvider.BlockSize);
             ICryptoTransform decryptor = _encryptionProvider.CreateDecryptor(key, key);
-
-            var decryptedMemoryStream = new MemoryStream();
 
             var fileData = file.Read();
             fileData.Seek(0, SeekOrigin.Begin);
             using (var cryptoStream = new CryptoStream(fileData, decryptor, CryptoStreamMode.Read))
             {
-                cryptoStream.CopyTo(decryptedMemoryStream);
+                cryptoStream.CopyTo(outputStream);
             }
-
-            return decryptedMemoryStream;
         }
 
         public void Encrypt(IFile<Stream> file)
@@ -67,9 +64,10 @@ namespace altCrypt.Core.x86.Encryption
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
 
-            using (Stream encryptedStream = this.EncryptToStream(file))
+            using (var memStream = new MemoryStream())
             {
-                file.Write(encryptedStream);
+                this.EncryptToStream(file, memStream);
+                file.Write(memStream);
             }
         }
 
@@ -78,9 +76,10 @@ namespace altCrypt.Core.x86.Encryption
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
 
-            using (Stream decryptedStream = this.DecryptToStream(file))
+            using (var memStream = new MemoryStream())
             {
-                file.Write(decryptedStream);
+                this.DecryptToStream(file, memStream);
+                file.Write(memStream);
             }
         }
     }

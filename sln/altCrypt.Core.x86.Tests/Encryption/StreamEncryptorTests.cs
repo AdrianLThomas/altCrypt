@@ -52,42 +52,64 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
         [ExpectedException(typeof(ArgumentNullException))]
         public void EncryptToStream_ThrowsArgumentNullException_WhenFileParamIsNull()
         {
-            _streamEncryptor.EncryptToStream(null);
+            _streamEncryptor.EncryptToStream(null, Stream.Null);
         }
 
         [TestMethod]
-        public void EncryptToStream_ReturnsNonNullStream_WhenFileParamIsValid()
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void EncryptToStream_ThrowsArgumentNullException_WhenStreamIsNull()
+        {
+            _streamEncryptor.EncryptToStream(Mock.Of<IFileStream>(), null);
+        }
+
+        [TestMethod]
+        public void EncryptToStream_ReturnsStreamWithExpectedLength_WhenFileParamIsValid()
         {
             //Arrange
-            //Act
-            Stream stream = _streamEncryptor.EncryptToStream(_unencryptedFile);
+            long expected = _encryptedData.Length;
+            long actual;
 
-            //Assert
-            Assert.IsNotNull(stream);
+            using (var memStream = new MemoryStream())
+            {
+                //Act
+                _streamEncryptor.EncryptToStream(_unencryptedFile, memStream);
+                actual = memStream.Length;
+
+                //Assert
+                Assert.AreEqual(expected, actual);
+            }
         }
 
         [TestMethod]
-        public void EncryptToStream_ReturnsExpectedEncryptedStream_WhenFileParamIsValid()
+        public void EncryptToStream_OutputsExpectedEncryptedStream_WhenFileParamIsValid()
         {
             //Arrange
             byte[] expected = _encryptedData;
             byte[] actual;
 
-            //Act
-            using (Stream encryptedResultStream = _streamEncryptor.EncryptToStream(_unencryptedFile))
+            using (var memStream = new MemoryStream())
             {
-                actual = encryptedResultStream.ToByteArray();
-            }
+                //Act
+                _streamEncryptor.EncryptToStream(_unencryptedFile, memStream);
+                actual = memStream.ToByteArray();
 
-            //Assert
-            Assert.IsTrue(actual.SequenceEqual(expected));
+                //Assert
+                Assert.IsTrue(actual.SequenceEqual(expected));
+            }
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void DecryptToStream_ThrowsArgumentNullException_WhenFileParamIsNull()
         {
-            _streamEncryptor.DecryptToStream(null);
+            _streamEncryptor.DecryptToStream(null, Stream.Null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void DecryptToStream_ThrowsArgumentNullException_WhenStreamIsNull()
+        {
+            _streamEncryptor.DecryptToStream(Mock.Of<IFileStream>(), null);
         }
 
         [TestMethod]
@@ -98,9 +120,10 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
             byte[] actual;
 
             //Act
-            using (Stream decryptedStream = _streamEncryptor.DecryptToStream(_encryptedFile))
+            using (var memStream = new MemoryStream())
             {
-                actual = decryptedStream.ToByteArray();
+                _streamEncryptor.DecryptToStream(_encryptedFile, memStream);
+                actual = memStream.ToByteArray();
             }
 
             //Assert

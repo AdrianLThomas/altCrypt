@@ -5,7 +5,7 @@ namespace altCrypt.Core.Encryption
 {
     public interface IEncryptToStream
     {
-        Stream EncryptToStream(IFile<Stream> file);
-        Stream DecryptToStream(IFile<Stream> file);
+        void EncryptToStream(IFile<Stream> file, Stream outputStream);
+        void DecryptToStream(IFile<Stream> file, Stream outputStream);
     }
 }
