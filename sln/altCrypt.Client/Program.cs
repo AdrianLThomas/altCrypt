@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using altCrypt.Core.Encryption;
 using altCrypt.Core.FileSystem;
 using altCrypt.Core.x86.Encryption;
 using altCrypt.Core.x86.FileSystem;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 
 namespace altCrypt.Client
@@ -16,7 +18,7 @@ namespace altCrypt.Client
             SymmetricAlgorithm encryptionProvider = new AesCryptoServiceProvider();
             IEncryptor encryptor = new StreamEncryptor(key, encryptionProvider);
 
-            ManipulateFile(encryptor);
+            //ManipulateFile(encryptor);
             ManipulateDirectory(encryptor);
         }
 
@@ -33,12 +35,16 @@ namespace altCrypt.Client
 
         private static void ManipulateDirectory(IEncryptor encryptor)
         {
-            //open directory (include subdirectories?)
-            //encrypt directory
-            //decrypt directory
+            IDirectory<Stream> directory = new LocalDirectory(@"C:\temp");
+            IEnumerable<IFile<Stream>> files = directory.GetFilesIncludingSubdirectories();
+            foreach(var file in files)
+                encryptor.Encrypt(file);
 
-            //string[] directories = Directory.GetFiles(String.Empty, "*.*", SearchOption.AllDirectories);
+            Console.WriteLine("Directory encrypted. Hit any key to decrypt");
+            Console.ReadKey();
 
+            foreach (var file in files)
+                encryptor.Decrypt(file);
         }
     }
 }

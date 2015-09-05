@@ -3,7 +3,7 @@ using System.IO;
 
 namespace altCrypt.Core.FileSystem
 {
-    public interface IDirectory<T> where T : Stream
+    public interface IDirectory<out T> where T : Stream
     {
         string Path { get; }
         IEnumerable<IFile<T>> GetFiles();
