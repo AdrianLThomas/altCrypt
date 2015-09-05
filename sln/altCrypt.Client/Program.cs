@@ -19,12 +19,38 @@ namespace altCrypt.Client
             IEncryptor encryptor = new StreamEncryptor(key, encryptionProvider);
 
             //ManipulateFile(encryptor);
-            ManipulateDirectory(encryptor);
+            //ManipulateDirectory(encryptor);
+
+            //var memStream = ReadFromFile(@"C:\temp\Picture.jpg");
+            //WriteToFile(memStream, @"C:\temp\New_Picture.jpg");
+        }
+
+        private static void WriteToFile(MemoryStream memStream, string path)
+        {
+            LocalFile file = new LocalFile(path);
+            file.Write(memStream);
+        }
+
+        private static MemoryStream ReadFromFile(string path)
+        {
+            LocalFile file = new LocalFile(path);
+            var memStream = new MemoryStream();
+            using (FileStream fileHandle = file.Read())
+            {
+                byte[] buffer = new byte[fileHandle.Length];
+                fileHandle.Read(buffer, 0, buffer.Length);
+                fileHandle.Seek(0, SeekOrigin.Begin);
+
+                memStream.Write(buffer, 0, buffer.Length);
+                memStream.Flush();
+            }
+
+            return memStream;
         }
 
         private static void ManipulateFile(IEncryptor encryptor)
         {
-            IFile<Stream> file = new LocalFile(@"C:\temp\Test.txt");
+            IFile<Stream> file = new LocalFile(@"C:\temp\Picture.jpg");
             encryptor.Encrypt(file);
 
             Console.WriteLine("Please check the file has been encrypted. Hit any key to decrypt...");
@@ -37,7 +63,7 @@ namespace altCrypt.Client
         {
             IDirectory<Stream> directory = new LocalDirectory(@"C:\temp");
             IEnumerable<IFile<Stream>> files = directory.GetFilesIncludingSubdirectories();
-            foreach(var file in files)
+            foreach (var file in files)
                 encryptor.Encrypt(file);
 
             Console.WriteLine("Directory encrypted. Hit any key to decrypt");
