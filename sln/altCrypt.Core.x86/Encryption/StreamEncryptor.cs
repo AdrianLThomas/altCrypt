@@ -33,11 +33,9 @@ namespace altCrypt.Core.x86.Encryption
 
             using (var stream = file.Read())
             {
-                byte[] buffer = stream.ToByteArray();
-
                 var memoryStream = new MemoryStream();
                 var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write);
-                cryptoStream.Write(buffer, 0, buffer.Length);
+                stream.CopyTo(cryptoStream);
                 cryptoStream.FlushFinalBlock();
 
                 return memoryStream;

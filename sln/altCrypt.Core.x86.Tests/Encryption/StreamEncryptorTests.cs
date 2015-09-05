@@ -15,7 +15,7 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
     public class StreamEncryptorTests
     {
         private readonly byte[] _unencryptedData = { 1, 2, 3 };
-        private readonly byte[] _encryptedData = { 168, 227, 219, 162, 143, 249, 34, 53, 145, 171, 47, 72, 183, 76, 190, 185 };
+        private readonly byte[] _encryptedData = { 133, 78, 234, 30, 211, 123, 83, 181, 74, 32, 182, 109, 141, 32, 129, 217 };
 
         private SymmetricAlgorithm _encryptionProvider;
         private IKey _key;
