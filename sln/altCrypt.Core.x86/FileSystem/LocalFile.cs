@@ -25,7 +25,7 @@ namespace altCrypt.Core.x86.FileSystem
                 throw new ArgumentNullException(nameof(stream));
             if (!stream.CanRead)
                 throw new ArgumentException("Can't read from stream");
-
+            
             using (var fileHandle = File.OpenWrite(_path))
             {
                 fileHandle.SetLength(0);

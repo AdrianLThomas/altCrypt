@@ -55,13 +55,10 @@ namespace altCrypt.Core.x86.Encryption
             var decryptedMemoryStream = new MemoryStream();
 
             var fileData = file.Read();
+            fileData.Seek(0, SeekOrigin.Begin);
             using (var cryptoStream = new CryptoStream(fileData, decryptor, CryptoStreamMode.Read))
             {
-                fileData.Seek(0, SeekOrigin.Begin);
-                string encryptedString = new StreamReader(cryptoStream).ReadToEnd();
-                StreamWriter fsDecrypted = new StreamWriter(decryptedMemoryStream);
-                fsDecrypted.Write(encryptedString);
-                fsDecrypted.Flush();
+                cryptoStream.CopyTo(decryptedMemoryStream);
             }
 
             return decryptedMemoryStream;
