@@ -9,6 +9,7 @@ namespace altCrypt.Core.x86.FileSystem
         private readonly string _path;
 
         public string Name => Path.GetFileName(_path);
+        public string FilePath => _path;
 
         public LocalFile(string path)
         {
