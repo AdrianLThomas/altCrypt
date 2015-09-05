@@ -16,7 +16,7 @@ namespace altCrypt.Client
         {
             IKey key = new Key("Pass@w0rd1");
             SymmetricAlgorithm encryptionProvider = new AesCryptoServiceProvider();
-            IEncryptor encryptor = new StreamEncryptor(key, encryptionProvider);
+            IEncryptToStream encryptor = new StreamEncryptor(key, encryptionProvider);
 
             //ManipulateFile(encryptor);
             //ManipulateDirectory(encryptor);
@@ -48,7 +48,7 @@ namespace altCrypt.Client
             return memStream;
         }
 
-        private static void ManipulateFile(IEncryptor encryptor)
+        private static void ManipulateFile(StreamEncryptor encryptor)
         {
             IFile<Stream> file = new LocalFile(@"C:\temp\Picture.jpg");
             encryptor.Encrypt(file);
@@ -59,7 +59,7 @@ namespace altCrypt.Client
             encryptor.Decrypt(file);
         }
 
-        private static void ManipulateDirectory(IEncryptor encryptor)
+        private static void ManipulateDirectory(StreamEncryptor encryptor)
         {
             IDirectory<Stream> directory = new LocalDirectory(@"C:\temp");
             IEnumerable<IFile<Stream>> files = directory.GetFilesIncludingSubdirectories();
