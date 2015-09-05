@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "altCrypt.Core.x86", "altCry
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "altCrypt.Core.x86.UnitTests", "altCrypt.Core.x86.Tests\altCrypt.Core.x86.UnitTests.csproj", "{1356215E-FBF0-4B9B-AA18-2DC6BCE0C462}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "altCrypt.Core.x86.IntegrationTests", "altCrypt.Core.x86.IntegrationTests\altCrypt.Core.x86.IntegrationTests.csproj", "{3F1882C9-3472-4CF0-86E5-C7059DA9BEA6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,6 +109,22 @@ Global
 		{1356215E-FBF0-4B9B-AA18-2DC6BCE0C462}.Release|x64.Build.0 = Release|Any CPU
 		{1356215E-FBF0-4B9B-AA18-2DC6BCE0C462}.Release|x86.ActiveCfg = Release|Any CPU
 		{1356215E-FBF0-4B9B-AA18-2DC6BCE0C462}.Release|x86.Build.0 = Release|Any CPU
+		{3F1882C9-3472-4CF0-86E5-C7059DA9BEA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F1882C9-3472-4CF0-86E5-C7059DA9BEA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F1882C9-3472-4CF0-86E5-C7059DA9BEA6}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{3F1882C9-3472-4CF0-86E5-C7059DA9BEA6}.Debug|ARM.Build.0 = Debug|Any CPU
+		{3F1882C9-3472-4CF0-86E5-C7059DA9BEA6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3F1882C9-3472-4CF0-86E5-C7059DA9BEA6}.Debug|x64.Build.0 = Debug|Any CPU
+		{3F1882C9-3472-4CF0-86E5-C7059DA9BEA6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3F1882C9-3472-4CF0-86E5-C7059DA9BEA6}.Debug|x86.Build.0 = Debug|Any CPU
+		{3F1882C9-3472-4CF0-86E5-C7059DA9BEA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F1882C9-3472-4CF0-86E5-C7059DA9BEA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F1882C9-3472-4CF0-86E5-C7059DA9BEA6}.Release|ARM.ActiveCfg = Release|Any CPU
+		{3F1882C9-3472-4CF0-86E5-C7059DA9BEA6}.Release|ARM.Build.0 = Release|Any CPU
+		{3F1882C9-3472-4CF0-86E5-C7059DA9BEA6}.Release|x64.ActiveCfg = Release|Any CPU
+		{3F1882C9-3472-4CF0-86E5-C7059DA9BEA6}.Release|x64.Build.0 = Release|Any CPU
+		{3F1882C9-3472-4CF0-86E5-C7059DA9BEA6}.Release|x86.ActiveCfg = Release|Any CPU
+		{3F1882C9-3472-4CF0-86E5-C7059DA9BEA6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -114,5 +132,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{E6E6F189-7F60-4EBB-8B1B-0CA4A260F2A4} = {FD2B74F0-DA7F-447E-9BF7-FC444F969001}
 		{1356215E-FBF0-4B9B-AA18-2DC6BCE0C462} = {FD2B74F0-DA7F-447E-9BF7-FC444F969001}
+		{3F1882C9-3472-4CF0-86E5-C7059DA9BEA6} = {FD2B74F0-DA7F-447E-9BF7-FC444F969001}
 	EndGlobalSection
 EndGlobal
