@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using altCrypt.Core.x86.FileSystem;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -47,6 +48,51 @@ namespace altCrypt.Core.x86.UnitTests.FileSystem
 
             //Act
             file.Write(stream); //Exception
+        }
+
+        [TestMethod] //TODO - This is an integration test. Seperate out.
+        public void Write_WritesText123_ToFile()
+        {
+            //Arrange
+            string expected = "123";
+            string actual;
+            string path = @"C:\temp\MyFile.txt";
+            var file = new LocalFile(path);
+            byte[] text = expected.Select(Convert.ToByte).ToArray();
+
+            //Act
+            using (var memoryStream = new MemoryStream(text))
+            {
+                file.Write(memoryStream);
+            }
+
+            actual = File.ReadAllText(path);
+
+            //Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod] //TODO - This is an integration test. Seperate out.
+        public void Read_ReadsText123_FromFile()
+        {
+            //Arrange
+            string expected = "123";
+            string actual;
+            string path = @"C:\temp\MyFile.txt";
+            var file = new LocalFile(path);
+            File.WriteAllText(path, expected);
+
+            //Act
+            using (FileStream myFile = file.Read())
+            {
+                using (var reader = new StreamReader(myFile))
+                {
+                    actual = reader.ReadToEnd();
+                }
+            }
+
+            //Assert
+            Assert.AreEqual(expected, actual);
         }
     }
 }
