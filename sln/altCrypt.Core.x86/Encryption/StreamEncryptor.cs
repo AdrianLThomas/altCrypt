@@ -31,14 +31,17 @@ namespace altCrypt.Core.x86.Encryption
             byte[] key = _key.GenerateBlock(_encryptionProvider.BlockSize);
             ICryptoTransform encryptor = _encryptionProvider.CreateEncryptor(key, key);
 
-            byte[] buffer = file.Read().ToByteArray();
+            using (var stream = file.Read())
+            {
+                byte[] buffer = stream.ToByteArray();
 
-            var memoryStream = new MemoryStream();
-            var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write);
-            cryptoStream.Write(buffer, 0, buffer.Length);
-            cryptoStream.FlushFinalBlock();
+                var memoryStream = new MemoryStream();
+                var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write);
+                cryptoStream.Write(buffer, 0, buffer.Length);
+                cryptoStream.FlushFinalBlock();
 
-            return memoryStream;
+                return memoryStream;
+            }
         }
 
         public Stream DecryptToStream(IFile<Stream> file)

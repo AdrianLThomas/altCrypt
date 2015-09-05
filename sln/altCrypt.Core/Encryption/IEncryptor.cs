@@ -8,5 +8,6 @@ namespace altCrypt.Core.Encryption
         Stream EncryptToStream(IFile<Stream> file);
         Stream DecryptToStream(IFile<Stream> file);
         void Encrypt(IFile<Stream> file);
+        void Decrypt(IFile<Stream> file);
     }
 }

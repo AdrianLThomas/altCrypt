@@ -1,4 +1,5 @@
-﻿using altCrypt.Core.Encryption;
+﻿using System;
+using altCrypt.Core.Encryption;
 using altCrypt.Core.FileSystem;
 using altCrypt.Core.x86.Encryption;
 using altCrypt.Core.x86.FileSystem;
@@ -17,6 +18,11 @@ namespace altCrypt.Client
 
             IFile<Stream> file = new LocalFile(@"C:\temp\Test.txt");
             encryptor.Encrypt(file);
+
+            Console.WriteLine("Please check the file has been encrypted. Hit any key to decrypt...");
+            Console.ReadKey();
+
+            encryptor.Decrypt(file);
         }
     }
 }
