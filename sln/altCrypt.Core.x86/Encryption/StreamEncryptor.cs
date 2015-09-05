@@ -64,11 +64,14 @@ namespace altCrypt.Core.x86.Encryption
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
 
-            using (var memStream = new MemoryStream())
+            string tempFilename = $"{file.FilePath}.temp";
+            using (var stream = new FileStream(tempFilename, FileMode.OpenOrCreate))
             {
-                this.EncryptToStream(file, memStream);
-                file.Write(memStream);
+                this.EncryptToStream(file, stream);
+                file.Write(stream);
             }
+
+            File.Delete(tempFilename);
         }
 
         public void Decrypt(IFile<Stream> file)
@@ -76,11 +79,14 @@ namespace altCrypt.Core.x86.Encryption
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
 
-            using (var memStream = new MemoryStream())
+            string tempFilename = $"{file.FilePath}.temp";
+            using (var stream = new FileStream(tempFilename, FileMode.OpenOrCreate))
             {
-                this.DecryptToStream(file, memStream);
-                file.Write(memStream);
+                this.DecryptToStream(file, stream);
+                file.Write(stream);
             }
+
+            File.Delete(tempFilename);
         }
     }
 }
