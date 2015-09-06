@@ -20,22 +20,29 @@
 
         <TabControl Grid.Row="1">
             <TabItem Header="Encrypt Files">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="10,10">
                         <TextBlock>Select to encrypt:</TextBlock>
-                        <Button Command="{Binding OnSelectFolderCommand}">Select a folder...</Button>
+                        <Button Command="{Binding OnSelectFolderCommand}" Margin="10,0">Select a folder...</Button>
                     </StackPanel>
 
-                    <ListBox>
-                        <ListBox.Items>
-                            <ListBoxItem>Test</ListBoxItem>
-                            <ListBoxItem>Test</ListBoxItem>
-                            <ListBoxItem>Test</ListBoxItem>
-                            <ListBoxItem>Test</ListBoxItem>
 
-                        </ListBox.Items>
+                    <ListBox ItemsSource="{Binding SelectedFiles}" IsEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Visible" Grid.Row="1">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding FilePath}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
                     </ListBox>
-                </StackPanel>
+
+                </Grid>
             </TabItem>
             <TabItem Header="Settings" IsEnabled="False"/>
         </TabControl>
