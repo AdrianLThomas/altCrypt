@@ -5,23 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:altCrypt.Client.Desktop"
         mc:Ignorable="d"
-        Title="altCrypt Desktop" Height="350" Width="525" WindowStartupLocation="CenterScreen">
+        Title="altCrypt Desktop" Height="450" Width="625" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <TextBlock FontSize="32" Margin="10">altCrypt Desktop</TextBlock>
+
         <TabControl Grid.Row="1">
-            <TabItem Header="Manual Mode">
-                <Grid Background="#FFE5E5E5"/>
+            <TabItem Header="Encrypt Files">
+                <Grid>
+                    <Rectangle Stretch="Fill" RadiusX="10" RadiusY="10" StrokeDashArray="10" Stroke="Black" Margin="50"/>
+                    <TextBlock FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center">Drag &amp; Drop Files/Folders to Encrypt</TextBlock>
+                </Grid>
             </TabItem>
-            <TabItem Header="Auto Mode (Coming Soon...)" IsEnabled="False">
-                
-            </TabItem>
-            <TabItem Header="Settings">
-                <Grid Background="#FFE5E5E5"/>
-            </TabItem>
+            <TabItem Header="Settings" IsEnabled="False"/>
         </TabControl>
     </Grid>
 </Window>
