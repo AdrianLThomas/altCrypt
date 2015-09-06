@@ -5,8 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:altCrypt.Client.Desktop"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="altCrypt Desktop" Height="350" Width="525" WindowStartupLocation="CenterScreen">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock FontSize="32" Margin="10">altCrypt Desktop</TextBlock>
+        <TabControl Grid.Row="1">
+            <TabItem Header="Manual Mode">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Header="Auto Mode (Coming Soon...)" IsEnabled="False">
+                
+            </TabItem>
+            <TabItem Header="Settings">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
