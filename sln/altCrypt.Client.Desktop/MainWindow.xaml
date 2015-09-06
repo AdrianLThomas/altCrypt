@@ -23,7 +23,7 @@
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock>Select to encrypt:</TextBlock>
-                        <Button Click="ButtonBase_OnClick">Select a folder...</Button>
+                        <Button Command="{Binding OnSelectFolderCommand}">Select a folder...</Button>
                     </StackPanel>
 
                     <ListBox>

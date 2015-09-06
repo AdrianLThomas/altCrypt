@@ -9,11 +9,5 @@ namespace altCrypt.Client.Desktop
         {
             InitializeComponent();
         }
-
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
-        {
-            var dialog = new CommonOpenFileDialog {IsFolderPicker = true};
-            CommonFileDialogResult result = dialog.ShowDialog();
-        }
     }
 }
