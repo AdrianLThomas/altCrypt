@@ -4,8 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        DataContext="{StaticResource MainPageViewModel}"
-        Title="altCrypt Desktop" Height="450" Width="625" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+        Title="altCrypt Desktop" 
+        Height="450" 
+        Width="625" 
+        WindowStartupLocation="CenterScreen" 
+        DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
+        ResizeMode="CanMinimize">
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
