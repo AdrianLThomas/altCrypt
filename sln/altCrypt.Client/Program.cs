@@ -1,74 +1,99 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Security.Cryptography;
 using altCrypt.Core.Encryption;
 using altCrypt.Core.FileSystem;
 using altCrypt.Core.x86.Encryption;
 using altCrypt.Core.x86.FileSystem;
-using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
 
-namespace altCrypt.Client
+namespace altCrypt.Client.CommandLine
 {
     static class Program
     {
         static void Main(string[] args)
         {
-            IKey key = new Key("Pass@w0rd1");
-            SymmetricAlgorithm encryptionProvider = new AesCryptoServiceProvider();
-            IEncryptToStream encryptor = new StreamEncryptor(key, encryptionProvider);
+            //TODO - refactor this mess and stablise :-)
+            //TODO - remove hardcoded AES
 
-            //ManipulateFile(encryptor);
-            //ManipulateDirectory(encryptor);
+            Console.WriteLine($"altCrypt [Alpha] ({DateTime.Now.Year})");
 
-            //var memStream = ReadFromFile(@"C:\temp\Picture.jpg");
-            //WriteToFile(memStream, @"C:\temp\New_Picture.jpg");
-        }
+            string intro = @"
+Usage: altCrypt <command> <switches>
 
-        private static void WriteToFile(MemoryStream memStream, string path)
-        {
-            LocalFile file = new LocalFile(path);
-            file.Write(memStream);
-        }
+<Commands>
+e : encrypt
+d : decrypt
 
-        private static MemoryStream ReadFromFile(string path)
-        {
-            LocalFile file = new LocalFile(path);
-            var memStream = new MemoryStream();
-            using (FileStream fileHandle = file.Read())
+<Switches>
+-d : directory
+-f : file
+-k : key
+
+<Example>
+altCrypt e -k ""Pass@w0rd1"" -d ""C:\temp""
+";
+            if (args.Length == 0)
             {
-                byte[] buffer = new byte[fileHandle.Length];
-                fileHandle.Read(buffer, 0, buffer.Length);
-                fileHandle.Seek(0, SeekOrigin.Begin);
-
-                memStream.Write(buffer, 0, buffer.Length);
-                memStream.Flush();
+                Console.WriteLine(intro);
+                return;
             }
+            string command = args[0];
+            string switch1Key = args[1];
+            string switch1Value = args[2];
 
-            return memStream;
+            string switch2Key = args[3];
+            string switch3Value = args[4];
+
+            IKey key = new Key(switch1Value);
+            SymmetricAlgorithm encryptionProvider = new AesCryptoServiceProvider();
+            StreamEncryptor encryptor = new StreamEncryptor(key, encryptionProvider);
+
+            string path = switch3Value;
+            switch (command)
+            {
+                case "e":
+                    if (switch2Key == "-d")
+                        EncryptDirectory(encryptor, path);
+                    else
+                        EncryptFile(encryptor, path);
+                    break;
+                case "d":
+                    if (switch2Key == "-d")
+                        DecryptDirectory(encryptor, path);
+                    else
+                        DecryptFile(encryptor, path);
+                    break;
+                default:
+                    Console.WriteLine($"Error: Command '{command}' not recognised");
+                    return;
+            }
         }
 
-        private static void ManipulateFile(StreamEncryptor encryptor)
+        private static void EncryptFile(StreamEncryptor encryptor, string path)
         {
-            IFile<Stream> file = new LocalFile(@"C:\temp\Picture.jpg");
+            IFile<Stream> file = new LocalFile(path);
             encryptor.Encrypt(file);
+        }
 
-            Console.WriteLine("Please check the file has been encrypted. Hit any key to decrypt...");
-            Console.ReadKey();
-
+        private static void DecryptFile(StreamEncryptor encryptor, string path)
+        {
+            IFile<Stream> file = new LocalFile(path);
             encryptor.Decrypt(file);
         }
 
-        private static void ManipulateDirectory(StreamEncryptor encryptor)
+        private static void EncryptDirectory(StreamEncryptor encryptor, string path)
         {
-            IDirectory<Stream> directory = new LocalDirectory(@"C:\temp");
+            IDirectory<Stream> directory = new LocalDirectory(path);
             IEnumerable<IFile<Stream>> files = directory.GetFilesIncludingSubdirectories();
             foreach (var file in files)
                 encryptor.Encrypt(file);
+        }
 
-            Console.WriteLine("Directory encrypted. Hit any key to decrypt");
-            Console.ReadKey();
-
+        private static void DecryptDirectory(StreamEncryptor encryptor, string path)
+        {
+            IDirectory<Stream> directory = new LocalDirectory(path);
+            IEnumerable<IFile<Stream>> files = directory.GetFilesIncludingSubdirectories();
             foreach (var file in files)
                 encryptor.Decrypt(file);
         }
