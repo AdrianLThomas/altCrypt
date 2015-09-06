@@ -1,4 +1,4 @@
 # altCrypt
-File encryption/decryption library.
+Local file encryption/decryption library with applications.
 
-This is currently in alpha. Breaking changes will be on going.
+This is currently in alpha. Breaking changes will be ongoing.
