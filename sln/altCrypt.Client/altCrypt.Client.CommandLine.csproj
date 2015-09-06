@@ -44,6 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Input\InputConstants.cs" />
+    <Compile Include="Input\Switch.cs" />
+    <Compile Include="Parser\ArgsParser.cs" />
+    <Compile Include="Input\Command.cs" />
+    <Compile Include="Parser\IArgs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

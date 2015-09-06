@@ -6,6 +6,9 @@ using altCrypt.Core.Encryption;
 using altCrypt.Core.FileSystem;
 using altCrypt.Core.x86.Encryption;
 using altCrypt.Core.x86.FileSystem;
+using System.Linq.Expressions;
+using altCrypt.Client.CommandLine.Input;
+using altCrypt.Client.CommandLine.Parser;
 
 namespace altCrypt.Client.CommandLine
 {
@@ -13,60 +16,38 @@ namespace altCrypt.Client.CommandLine
     {
         static void Main(string[] args)
         {
-            //TODO - refactor this mess and stablise :-)
+            //TODO - refactor
             //TODO - remove hardcoded AES
 
             Console.WriteLine($"altCrypt [Alpha] ({DateTime.Now.Year})");
+            var argsParser = new ArgsParser(args);
 
-            string intro = @"
-Usage: altCrypt <command> <switches>
-
-<Commands>
-e : encrypt
-d : decrypt
-
-<Switches>
--d : directory
--f : file
--k : key
-
-<Example>
-altCrypt e -k ""Pass@w0rd1"" -d ""C:\temp""
-";
-            if (args.Length == 0)
+            string intro = GetIntro();
+            if (argsParser.IsError)
             {
                 Console.WriteLine(intro);
                 return;
             }
-            string command = args[0];
-            string switch1Key = args[1];
-            string switch1Value = args[2];
 
-            string switch2Key = args[3];
-            string switch3Value = args[4];
-
-            IKey key = new Key(switch1Value);
+            IKey key = new Key(argsParser.Password);
             SymmetricAlgorithm encryptionProvider = new AesCryptoServiceProvider();
             StreamEncryptor encryptor = new StreamEncryptor(key, encryptionProvider);
 
-            string path = switch3Value;
-            switch (command)
+            string path = argsParser.Path;
+            switch (argsParser.Command)
             {
-                case "e":
-                    if (switch2Key == "-d")
+                case Command.Encrypt:
+                    if (argsParser.Switch.HasFlag(Switch.Directory))
                         EncryptDirectory(encryptor, path);
                     else
                         EncryptFile(encryptor, path);
                     break;
-                case "d":
-                    if (switch2Key == "-d")
+                case Command.Decrypt:
+                    if (argsParser.Switch.HasFlag(Switch.Directory))
                         DecryptDirectory(encryptor, path);
                     else
                         DecryptFile(encryptor, path);
                     break;
-                default:
-                    Console.WriteLine($"Error: Command '{command}' not recognised");
-                    return;
             }
         }
 
@@ -96,6 +77,25 @@ altCrypt e -k ""Pass@w0rd1"" -d ""C:\temp""
             IEnumerable<IFile<Stream>> files = directory.GetFilesIncludingSubdirectories();
             foreach (var file in files)
                 encryptor.Decrypt(file);
+        }
+
+        private static string GetIntro()
+        {
+            return @"
+Usage: altCrypt <command> <switches>
+
+<Commands>
+e : encrypt
+d : decrypt
+
+<Switches>
+-k : key (required)
+-d : directory
+-f : file
+
+<Example>
+altCrypt e -k ""Pass@w0rd1"" -d ""C:\temp""
+";
         }
     }
 }
