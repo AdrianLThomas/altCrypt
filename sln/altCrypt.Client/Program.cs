@@ -15,6 +15,7 @@ namespace altCrypt.Client.CommandLine
     static class Program
     {
         private static IArgs _args;
+        private static StreamEncryptor _encryptor;
 
         static void Main(string[] args)
         {
@@ -31,21 +32,21 @@ namespace altCrypt.Client.CommandLine
             Console.WriteLine($"Parameters:\r\n{_args.ToString()}");
             Console.WriteLine($"Started: {DateTime.Now}");
 
-            var encryptor = new StreamEncryptor(new Key(_args.Key), _args.Algorithm);
+            _encryptor = new StreamEncryptor(new Key(_args.Key), _args.Algorithm);
 
             switch (_args.Command)
             {
                 case Command.Encrypt:
                     if (_args.Switches.HasFlag(Switch.Directory))
-                        EncryptDirectory(encryptor);
+                        EncryptDirectory();
                     else
-                        EncryptFile(encryptor);
+                        EncryptFile();
                     break;
                 case Command.Decrypt:
                     if (_args.Switches.HasFlag(Switch.Directory))
-                        DecryptDirectory(encryptor);
+                        DecryptDirectory();
                     else
-                        DecryptFile(encryptor);
+                        DecryptFile();
                     break;
             }
 
@@ -53,32 +54,32 @@ namespace altCrypt.Client.CommandLine
             if (System.Diagnostics.Debugger.IsAttached) Console.ReadLine();
         }
 
-        private static void EncryptFile(StreamEncryptor encryptor)
+        private static void EncryptFile()
         {
             IFile<Stream> file = new LocalFile(_args.Path);
-            encryptor.Encrypt(file);
+            _encryptor.Encrypt(file);
         }
 
-        private static void DecryptFile(StreamEncryptor encryptor)
+        private static void DecryptFile()
         {
             IFile<Stream> file = new LocalFile(_args.Path);
-            encryptor.Decrypt(file);
+            _encryptor.Decrypt(file);
         }
 
-        private static void EncryptDirectory(StreamEncryptor encryptor)
+        private static void EncryptDirectory()
         {
             IDirectory<Stream> directory = new LocalDirectory(_args.Path);
             IEnumerable<IFile<Stream>> files = directory.GetFilesIncludingSubdirectories();
             foreach (var file in files)
-                encryptor.Encrypt(file);
+                _encryptor.Encrypt(file);
         }
 
-        private static void DecryptDirectory(StreamEncryptor encryptor)
+        private static void DecryptDirectory()
         {
             IDirectory<Stream> directory = new LocalDirectory(_args.Path);
             IEnumerable<IFile<Stream>> files = directory.GetFilesIncludingSubdirectories();
             foreach (var file in files)
-                encryptor.Decrypt(file);
+                _encryptor.Decrypt(file);
         }
 
         private static string GetInstructions()
