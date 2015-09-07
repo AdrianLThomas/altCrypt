@@ -7,8 +7,8 @@
     <ProjectGuid>{2769C8D0-EF37-4BA9-8859-13C45A517F27}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>altCrypt.Client</RootNamespace>
-    <AssemblyName>altCrypt.Client</AssemblyName>
+    <RootNamespace>altCrypt.Client.CommandLine</RootNamespace>
+    <AssemblyName>altCrypt.Client.CommandLine</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -44,6 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Input\InputConstants.cs" />
+    <Compile Include="Input\Switch.cs" />
+    <Compile Include="Parser\ArgsParser.cs" />
+    <Compile Include="Input\Command.cs" />
+    <Compile Include="Parser\IArgs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
