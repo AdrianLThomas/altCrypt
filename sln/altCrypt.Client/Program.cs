@@ -29,7 +29,7 @@ namespace altCrypt.Client.CommandLine
                 return;
             }
 
-            IKey key = new Key(argsParser.Password);
+            IKey key = new Key(argsParser.Key);
             SymmetricAlgorithm encryptionProvider = new AesCryptoServiceProvider();
             StreamEncryptor encryptor = new StreamEncryptor(key, encryptionProvider);
 
@@ -37,13 +37,13 @@ namespace altCrypt.Client.CommandLine
             switch (argsParser.Command)
             {
                 case Command.Encrypt:
-                    if (argsParser.Switch.HasFlag(Switch.Directory))
+                    if (argsParser.Switches.HasFlag(Switch.Directory))
                         EncryptDirectory(encryptor, path);
                     else
                         EncryptFile(encryptor, path);
                     break;
                 case Command.Decrypt:
-                    if (argsParser.Switch.HasFlag(Switch.Directory))
+                    if (argsParser.Switches.HasFlag(Switch.Directory))
                         DecryptDirectory(encryptor, path);
                     else
                         DecryptFile(encryptor, path);
@@ -90,12 +90,13 @@ d : decrypt
 
 <Switches>
 -k : key (required)
+-s : key size
 -d : directory
 -f : file
 -a : algorithm (AES, DES, RC2, Rijndael, TripleDES)
 
 <Example>
-altCrypt e -k ""Pass@w0rd1"" -d ""C:\temp""
+altCrypt e -k ""Pass@w0rd1"" -s 128 -d ""C:\temp"" -a AES
 ";
         }
     }

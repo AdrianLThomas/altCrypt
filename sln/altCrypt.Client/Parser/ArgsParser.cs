@@ -12,17 +12,20 @@ namespace altCrypt.Client.CommandLine.Parser
     {
         private readonly string[] _args;
 
-        public bool IsError { get; private set; } = false;
+        public bool IsError { get; private set; }
         public Command Command { get; private set; } = Command.None;
-        public Switch Switch { get; private set; } = Switch.None;
-        public string Path { get; private set; } = null;
-        public string Password { get; private set; } = null;
+        public Switch Switches { get; private set; } = Switch.None;
+        public string Path { get; private set; }
+        public string Key { get; private set; }
+        public int KeySize { get; private set; } = 128;
         public SymmetricAlgorithm Algorithm { get; private set; }
 
         public ArgsParser(string[] args)
         {
             if (args == null)
                 throw new ArgumentNullException(nameof(args));
+
+            //TODO - refactor
 
             _args = args;
 
@@ -55,11 +58,12 @@ namespace altCrypt.Client.CommandLine.Parser
 
             //Validate Switches
             {
-                //Password
+                //Key
                 int passwordSwitchIndex = Array.IndexOf(args, InputConstants.KeySwitch);
                 if (passwordSwitchIndex > 0)
                 {
-                    Password = args[passwordSwitchIndex + 1];
+                    Key = args[passwordSwitchIndex + 1];
+                    Switches = Switches | Switch.Key;
                 }
                 else
                 {
@@ -72,13 +76,13 @@ namespace altCrypt.Client.CommandLine.Parser
                 int fileSwitchIndex = Array.IndexOf(args, InputConstants.FileSwitch);
                 if (directorySwitchIndex > 0)
                 {
-                    Switch = Switch.Directory;
                     Path = args[directorySwitchIndex + 1];
+                    Switches = Switches | Switch.Directory;
                 }
                 else if (fileSwitchIndex > 0)
                 {
-                    Switch = Switch.File;
                     Path = args[fileSwitchIndex + 1];
+                    Switches = Switches | Switch.File;
                 }
                 else
                 {
@@ -93,6 +97,18 @@ namespace altCrypt.Client.CommandLine.Parser
                     string algorithmName = args[algorithmSwitchIndex + 1];
 
                     Algorithm = SymmetricAlgorithm.Create(algorithmName) ?? Aes.Create();
+
+                    Switches = Switches | Switch.Algorithm;
+                }
+
+                //Key Size
+                int keySizeSwitchIndex = Array.IndexOf(args, InputConstants.KeySizeSwitch);
+                if (keySizeSwitchIndex > 0)
+                {
+                    int keySize = int.Parse(args[keySizeSwitchIndex + 1]);
+                    KeySize = keySize;
+
+                    Switches = Switches | Switch.KeySize;
                 }
             }
         }

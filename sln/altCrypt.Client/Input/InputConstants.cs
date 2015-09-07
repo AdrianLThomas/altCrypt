@@ -12,6 +12,7 @@ namespace altCrypt.Client.CommandLine.Input
         public static string DecryptCommand = "d";
 
         public static string KeySwitch = "-k";
+        public static string KeySizeSwitch = "-s";
         public static string DirectorySwitch = "-d";
         public static string FileSwitch = "-f";
         public static string AlgorithmSwitch = "-a";

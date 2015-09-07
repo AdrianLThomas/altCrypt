@@ -7,7 +7,7 @@ namespace altCrypt.Client.CommandLine.Parser
     {
         bool IsError { get; }
         Command Command { get; }
-        Switch Switch { get; }
+        Switch Switches { get; }
         string Path { get; }
     }
 }

@@ -13,5 +13,7 @@ namespace altCrypt.Client.CommandLine.Input
         Key = 2,
         Directory = 4,
         File = 8,
+        Algorithm = 16,
+        KeySize = 32
     }
 }
