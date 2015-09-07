@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using altCrypt.Core.x86.Encryption;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -77,6 +78,25 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
 
             //Assert
             Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void GenerateIV_GeneratesDifferentResult_EachTimeCalled()
+        {
+            //Arrange
+            var iv = new RandomIV();
+            int blockSize = 128;
+
+            const int expected = 16;
+            byte[] iv1;
+            byte[] iv2;
+
+            //Act
+            iv1 = iv.GenerateIV(blockSize);
+            iv2 = iv.GenerateIV(blockSize);
+
+            //Assert
+            Assert.IsFalse(iv1.SequenceEqual(iv2));
         }
     }
 }
