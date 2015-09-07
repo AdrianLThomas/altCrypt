@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Xml.Schema;
 using altCrypt.Client.CommandLine.Input;
+using Switch = altCrypt.Client.CommandLine.Input.Switch;
 
 namespace altCrypt.Client.CommandLine.Parser
 {
@@ -14,6 +17,7 @@ namespace altCrypt.Client.CommandLine.Parser
         public Switch Switch { get; private set; } = Switch.None;
         public string Path { get; private set; } = null;
         public string Password { get; private set; } = null;
+        public SymmetricAlgorithm Algorithm { get; private set; }
 
         public ArgsParser(string[] args)
         {
@@ -80,6 +84,15 @@ namespace altCrypt.Client.CommandLine.Parser
                 {
                     IsError = true;
                     return;
+                }
+
+                //Algorithm
+                int algorithmSwitchIndex = Array.IndexOf(args, InputConstants.AlgorithmSwitch);
+                if (algorithmSwitchIndex > 0)
+                {
+                    string algorithmName = args[algorithmSwitchIndex + 1];
+
+                    Algorithm = SymmetricAlgorithm.Create(algorithmName) ?? Aes.Create();
                 }
             }
         }

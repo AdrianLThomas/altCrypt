@@ -92,6 +92,7 @@ d : decrypt
 -k : key (required)
 -d : directory
 -f : file
+-a : algorithm (AES, DES, RC2, Rijndael, TripleDES)
 
 <Example>
 altCrypt e -k ""Pass@w0rd1"" -d ""C:\temp""
