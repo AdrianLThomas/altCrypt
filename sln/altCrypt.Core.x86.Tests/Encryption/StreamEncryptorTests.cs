@@ -14,11 +14,14 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
     [TestClass]
     public class StreamEncryptorTests
     {
+        private readonly byte[] _ivData = { 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255 };
         private readonly byte[] _unencryptedData = { 1, 2, 3 };
-        private readonly byte[] _encryptedData = { 133, 78, 234, 30, 211, 123, 83, 181, 74, 32, 182, 109, 141, 32, 129, 217 };
+        private readonly byte[] _encryptedData = { 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, /*<- IV bytes*/
+                                                   255, 129, 97, 155, 60, 235, 240, 133, 241, 13, 67, 72, 241, 82, 10, 0 /*<- Encrypted content*/};
 
         private SymmetricAlgorithm _encryptionProvider;
         private IKey _key;
+        private IIV _iv;
         private StreamEncryptor _streamEncryptor;
         private IFileStream _unencryptedFile;
         private IFileStream _encryptedFile;
@@ -28,8 +31,12 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
         {
             _encryptionProvider = Aes.Create();
 
+            var ivMock = new Mock<IIV>();
+            ivMock.Setup(m => m.GenerateIV(It.IsAny<int>())).Returns(_ivData);
+
+            _iv = ivMock.Object;
             _key = Mock.Of<IKey>();
-            _streamEncryptor = new StreamEncryptor(new Key("password"), _encryptionProvider);
+            _streamEncryptor = new StreamEncryptor(new Key("password"), _iv, _encryptionProvider);
             _unencryptedFile = Mock.Of<IFileStream>(m => m.Read() == GetUnencryptedTestStream());
             _encryptedFile = Mock.Of<IFileStream>(m => m.Read() == GetEncryptedTestStream());
         }
@@ -38,14 +45,21 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_ThrowsArgumentNullException_WhenKeyIsNull()
         {
-            new StreamEncryptor(null, _encryptionProvider);
+            new StreamEncryptor(null, _iv, _encryptionProvider);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_ThrowsArgumentNullException_WhenEncryptionProviderIsNull()
         {
-            new StreamEncryptor(_key, null);
+            new StreamEncryptor(_key, _iv, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Ctor_ThrowsArgumentNullException_WhenIVIsNull()
+        {
+            new StreamEncryptor(_key, null, _encryptionProvider);
         }
 
         [TestMethod]

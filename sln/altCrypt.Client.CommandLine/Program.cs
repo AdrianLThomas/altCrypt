@@ -32,7 +32,7 @@ namespace altCrypt.Client.CommandLine
             Console.WriteLine($"Parameters:\r\n{_args.ToString()}");
             Console.WriteLine($"Started: {DateTime.Now}");
 
-            _encryptor = new StreamEncryptor(new Key(_args.Key), _args.Algorithm);
+            _encryptor = new StreamEncryptor(new Key(_args.Key), new RandomIV(),  _args.Algorithm);
 
             switch (_args.Command)
             {
