@@ -54,6 +54,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Encryption\RandomIVTests.cs" />
     <Compile Include="Encryption\StreamEncryptorTests.cs" />
     <Compile Include="FileSystem\LocalDirectoryTests.cs" />
     <Compile Include="FileSystem\LocalFileTests.cs" />

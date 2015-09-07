@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Encryption\RandomIV.cs" />
     <Compile Include="Encryption\StreamEncryptor.cs" />
     <Compile Include="FileSystem\LocalDirectory.cs" />
     <Compile Include="FileSystem\LocalFile.cs" />
