@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Xml.Schema;
 using altCrypt.Client.CommandLine.Input;
@@ -18,7 +19,7 @@ namespace altCrypt.Client.CommandLine.Parser
         public string Path { get; private set; }
         public string Key { get; private set; }
         public int KeySize { get; private set; } = 128;
-        public SymmetricAlgorithm Algorithm { get; private set; }
+        public SymmetricAlgorithm Algorithm { get; private set; } = Aes.Create();
 
         public ArgsParser(string[] args)
         {
@@ -96,7 +97,7 @@ namespace altCrypt.Client.CommandLine.Parser
                 {
                     string algorithmName = args[algorithmSwitchIndex + 1];
 
-                    Algorithm = SymmetricAlgorithm.Create(algorithmName) ?? Aes.Create();
+                    Algorithm = SymmetricAlgorithm.Create(algorithmName);
 
                     Switches = Switches | Switch.Algorithm;
                 }
@@ -107,10 +108,16 @@ namespace altCrypt.Client.CommandLine.Parser
                 {
                     int keySize = int.Parse(args[keySizeSwitchIndex + 1]);
                     KeySize = keySize;
+                    Algorithm.KeySize = keySize;
 
                     Switches = Switches | Switch.KeySize;
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            return $"Command: {Command}\r\nSwitches: {Switches}\r\nPath: {Path}\r\nKey: {new string('*', Key.Length)}\r\nKey Size: {KeySize}\r\n";
         }
     }
 }

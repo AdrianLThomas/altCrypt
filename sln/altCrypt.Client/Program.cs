@@ -29,6 +29,9 @@ namespace altCrypt.Client.CommandLine
                 return;
             }
 
+            Console.WriteLine($"Parameters: {argsParser.ToString()}");
+            Console.WriteLine($"Started: {DateTime.Now}");
+
             IKey key = new Key(argsParser.Key);
             SymmetricAlgorithm encryptionProvider = new AesCryptoServiceProvider();
             StreamEncryptor encryptor = new StreamEncryptor(key, encryptionProvider);
@@ -49,6 +52,9 @@ namespace altCrypt.Client.CommandLine
                         DecryptFile(encryptor, path);
                     break;
             }
+
+            Console.WriteLine($"Finished: {DateTime.Now}");
+            if (System.Diagnostics.Debugger.IsAttached) Console.ReadLine();
         }
 
         private static void EncryptFile(StreamEncryptor encryptor, string path)
