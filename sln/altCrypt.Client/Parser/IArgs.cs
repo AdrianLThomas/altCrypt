@@ -13,5 +13,7 @@ namespace altCrypt.Client.CommandLine.Parser
         string Key { get; }
         int KeySize { get; }
         SymmetricAlgorithm Algorithm { get; }
+
+        string ToString();
     }
 }

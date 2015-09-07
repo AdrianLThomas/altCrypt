@@ -14,39 +14,38 @@ namespace altCrypt.Client.CommandLine
 {
     static class Program
     {
+        private static IArgs _args;
+
         static void Main(string[] args)
         {
             Console.WriteLine($"altCrypt [Alpha] ({DateTime.Now.Year})");
-            IArgs argsParser = new ArgsParser(args);
+            _args = new ArgsParser(args);
 
-            string intro = GetIntro();
-            if (argsParser.IsError)
+            string instructions = GetInstructions();
+            if (_args.IsError)
             {
-                Console.WriteLine(intro);
+                Console.WriteLine(instructions);
                 return;
             }
 
-            Console.WriteLine($"Parameters: {argsParser.ToString()}");
+            Console.WriteLine($"Parameters:\r\n{_args.ToString()}");
             Console.WriteLine($"Started: {DateTime.Now}");
 
-            IKey key = new Key(argsParser.Key);
-            SymmetricAlgorithm encryptionProvider = argsParser.Algorithm;
-            StreamEncryptor encryptor = new StreamEncryptor(key, encryptionProvider);
+            var encryptor = new StreamEncryptor(new Key(_args.Key), _args.Algorithm);
 
-            string path = argsParser.Path;
-            switch (argsParser.Command)
+            switch (_args.Command)
             {
                 case Command.Encrypt:
-                    if (argsParser.Switches.HasFlag(Switch.Directory))
-                        EncryptDirectory(encryptor, path);
+                    if (_args.Switches.HasFlag(Switch.Directory))
+                        EncryptDirectory(encryptor);
                     else
-                        EncryptFile(encryptor, path);
+                        EncryptFile(encryptor);
                     break;
                 case Command.Decrypt:
-                    if (argsParser.Switches.HasFlag(Switch.Directory))
-                        DecryptDirectory(encryptor, path);
+                    if (_args.Switches.HasFlag(Switch.Directory))
+                        DecryptDirectory(encryptor);
                     else
-                        DecryptFile(encryptor, path);
+                        DecryptFile(encryptor);
                     break;
             }
 
@@ -54,35 +53,35 @@ namespace altCrypt.Client.CommandLine
             if (System.Diagnostics.Debugger.IsAttached) Console.ReadLine();
         }
 
-        private static void EncryptFile(StreamEncryptor encryptor, string path)
+        private static void EncryptFile(StreamEncryptor encryptor)
         {
-            IFile<Stream> file = new LocalFile(path);
+            IFile<Stream> file = new LocalFile(_args.Path);
             encryptor.Encrypt(file);
         }
 
-        private static void DecryptFile(StreamEncryptor encryptor, string path)
+        private static void DecryptFile(StreamEncryptor encryptor)
         {
-            IFile<Stream> file = new LocalFile(path);
+            IFile<Stream> file = new LocalFile(_args.Path);
             encryptor.Decrypt(file);
         }
 
-        private static void EncryptDirectory(StreamEncryptor encryptor, string path)
+        private static void EncryptDirectory(StreamEncryptor encryptor)
         {
-            IDirectory<Stream> directory = new LocalDirectory(path);
+            IDirectory<Stream> directory = new LocalDirectory(_args.Path);
             IEnumerable<IFile<Stream>> files = directory.GetFilesIncludingSubdirectories();
             foreach (var file in files)
                 encryptor.Encrypt(file);
         }
 
-        private static void DecryptDirectory(StreamEncryptor encryptor, string path)
+        private static void DecryptDirectory(StreamEncryptor encryptor)
         {
-            IDirectory<Stream> directory = new LocalDirectory(path);
+            IDirectory<Stream> directory = new LocalDirectory(_args.Path);
             IEnumerable<IFile<Stream>> files = directory.GetFilesIncludingSubdirectories();
             foreach (var file in files)
                 encryptor.Decrypt(file);
         }
 
-        private static string GetIntro()
+        private static string GetInstructions()
         {
             return @"
 Usage: altCrypt <command> <switches>
