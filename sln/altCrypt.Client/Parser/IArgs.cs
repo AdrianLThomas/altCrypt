@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 using altCrypt.Client.CommandLine.Input;
 
 namespace altCrypt.Client.CommandLine.Parser
@@ -9,5 +10,8 @@ namespace altCrypt.Client.CommandLine.Parser
         Command Command { get; }
         Switch Switches { get; }
         string Path { get; }
+        string Key { get; }
+        int KeySize { get; }
+        SymmetricAlgorithm Algorithm { get; }
     }
 }

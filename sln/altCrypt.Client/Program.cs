@@ -16,11 +16,8 @@ namespace altCrypt.Client.CommandLine
     {
         static void Main(string[] args)
         {
-            //TODO - refactor
-            //TODO - remove hardcoded AES
-
             Console.WriteLine($"altCrypt [Alpha] ({DateTime.Now.Year})");
-            var argsParser = new ArgsParser(args);
+            IArgs argsParser = new ArgsParser(args);
 
             string intro = GetIntro();
             if (argsParser.IsError)
@@ -33,7 +30,7 @@ namespace altCrypt.Client.CommandLine
             Console.WriteLine($"Started: {DateTime.Now}");
 
             IKey key = new Key(argsParser.Key);
-            SymmetricAlgorithm encryptionProvider = new AesCryptoServiceProvider();
+            SymmetricAlgorithm encryptionProvider = argsParser.Algorithm;
             StreamEncryptor encryptor = new StreamEncryptor(key, encryptionProvider);
 
             string path = argsParser.Path;
