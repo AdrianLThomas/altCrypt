@@ -25,10 +25,11 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    
+
                     <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="10,10">
-                        <TextBlock>Select to encrypt:</TextBlock>
                         <Button Command="{Binding OnSelectFolderCommand}" Margin="10,0">Select a folder...</Button>
+                        <Button Command="{Binding EncryptCommand}" IsEnabled="{Binding SelectedFiles.Count}">Encrypt</Button>
+                        <Button Command="{Binding DecryptCommand}" IsEnabled="{Binding SelectedFiles.Count}">Decrypt</Button>
                     </StackPanel>
 
 

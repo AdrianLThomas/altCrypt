@@ -1,9 +1,9 @@
-using System.Collections.Generic;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows.Input;
+using altCrypt.Core.Encryption;
 using altCrypt.Core.FileSystem;
 using altCrypt.Core.x86.FileSystem;
 using GalaSoft.MvvmLight;
@@ -14,20 +14,32 @@ namespace altCrypt.Client.Desktop.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
+        private readonly IEncryptFile _fileEncryptor;
         public string ApplicationName { get; } = "altCrypt Desktop [Alpha]";
         public ICommand OnSelectFolderCommand { get; }
+        public ICommand EncryptCommand { get; }
+        public ICommand DecryptCommand { get; }
+
         public ObservableCollection<IFile<Stream>> SelectedFiles { get; } = new ObservableCollection<IFile<Stream>>();
 
-        public MainViewModel()
+
+        public MainViewModel(IEncryptFile fileEncryptor)
         {
+            if (fileEncryptor == null)
+                throw new ArgumentNullException(nameof(fileEncryptor));
+
+            _fileEncryptor = fileEncryptor;
+
             OnSelectFolderCommand = new RelayCommand(AddSelectedFilesToCollection);
+            EncryptCommand = new RelayCommand(EncryptSelectedFiles);
+            DecryptCommand = new RelayCommand(DecryptSelectedFiles);
         }
 
         private void AddSelectedFilesToCollection()
         {
             var dialog = new CommonOpenFileDialog { IsFolderPicker = true };
             CommonFileDialogResult result = dialog.ShowDialog();
-            
+
             if (result == CommonFileDialogResult.Ok)
             {
                 SelectedFiles.Clear();
@@ -38,6 +50,18 @@ namespace altCrypt.Client.Desktop.ViewModel
                 foreach (IFile<Stream> file in directory.GetFilesIncludingSubdirectories())
                     SelectedFiles.Add(file);
             }
+        }
+
+        private void EncryptSelectedFiles()
+        {
+            foreach(var file in this.SelectedFiles)
+                _fileEncryptor.Encrypt(file);
+        }
+
+        private void DecryptSelectedFiles()
+        {
+            foreach (var file in this.SelectedFiles)
+                _fileEncryptor.Decrypt(file);
         }
     }
 }
