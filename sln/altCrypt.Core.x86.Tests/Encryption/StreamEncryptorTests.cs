@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -148,7 +149,7 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
         [ExpectedException(typeof(ArgumentNullException))]
         public void Encrypt_ThrowsArgumentNullException_WhenFileParamIsNull()
         {
-            _streamEncryptor.Encrypt(null);
+            _streamEncryptor.Encrypt((IFileStream)null);
         }
 
         [TestMethod]
@@ -167,9 +168,36 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
+        public void Encrypt_ThrowsArgumentNullException_WhenIEnumerableIsNull()
+        {
+            _streamEncryptor.Encrypt((IEnumerable<IFileStream>)null);
+        }
+
+        [TestMethod]
+        public void Encrypt_CallsWriteOnAllFiles_WhenIEnumerableIsValid()
+        {
+            //Arrange
+            var fileMocks = new List<Mock<IFileStream>>();
+            for (int i = 0; i < 3; ++i)
+            {
+                var fileMock = new Mock<IFileStream>();
+                fileMock.Setup(m => m.Read()).Returns(GetUnencryptedTestStream);
+                fileMocks.Add(fileMock);
+            }
+            IEnumerable<IFileStream> files = fileMocks.Select(x => x.Object);
+
+            //Act
+            _streamEncryptor.Encrypt(files);
+
+            //Assert
+            fileMocks.ForEach(x => x.Verify(m => m.Write(It.IsAny<Stream>())));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
         public void Decrypt_ThrowsArgumentNullException_WhenFileParamIsNull()
         {
-            _streamEncryptor.Decrypt(null);
+            _streamEncryptor.Decrypt((IFileStream)null);
         }
 
         [TestMethod]
@@ -184,6 +212,33 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
 
             //Assert
             fileMock.Verify(m => m.Write(It.IsAny<Stream>()));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Dencrypt_ThrowsArgumentNullException_WhenIEnumerableIsNull()
+        {
+            _streamEncryptor.Decrypt((IEnumerable<IFileStream>)null);
+        }
+
+        [TestMethod]
+        public void Decrypt_CallsWriteOnAllFiles_WhenIEnumerableIsValid()
+        {
+            //Arrange
+            var fileMocks = new List<Mock<IFileStream>>();
+            for (int i = 0; i < 3; ++i)
+            {
+                var fileMock = new Mock<IFileStream>();
+                fileMock.Setup(m => m.Read()).Returns(GetEncryptedTestStream);
+                fileMocks.Add(fileMock);
+            }
+            IEnumerable<IFileStream> files = fileMocks.Select(x => x.Object);
+
+            //Act
+            _streamEncryptor.Decrypt(files);
+
+            //Assert
+            fileMocks.ForEach(x => x.Verify(m => m.Write(It.IsAny<Stream>())));
         }
 
 
