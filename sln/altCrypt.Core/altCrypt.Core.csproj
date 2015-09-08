@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Encryption\IEncryptFile.cs" />
+    <Compile Include="Encryption\IEncryptFiles.cs" />
     <Compile Include="Encryption\IIV.cs" />
     <Compile Include="Encryption\IKey.cs" />
     <Compile Include="Encryption\Key.cs" />
