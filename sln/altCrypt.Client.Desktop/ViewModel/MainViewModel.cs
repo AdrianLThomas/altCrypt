@@ -14,7 +14,7 @@ namespace altCrypt.Client.Desktop.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        private readonly IEncryptFile _fileEncryptor;
+        private readonly IEncryptFiles _fileEncryptor;
         public string ApplicationName { get; } = "altCrypt Desktop [Alpha]";
         public ICommand OnSelectFolderCommand { get; }
         public ICommand EncryptCommand { get; }
@@ -23,7 +23,7 @@ namespace altCrypt.Client.Desktop.ViewModel
         public ObservableCollection<IFile<Stream>> SelectedFiles { get; } = new ObservableCollection<IFile<Stream>>();
 
 
-        public MainViewModel(IEncryptFile fileEncryptor)
+        public MainViewModel(IEncryptFiles fileEncryptor)
         {
             if (fileEncryptor == null)
                 throw new ArgumentNullException(nameof(fileEncryptor));
@@ -54,14 +54,12 @@ namespace altCrypt.Client.Desktop.ViewModel
 
         private void EncryptSelectedFiles()
         {
-            foreach(var file in this.SelectedFiles)
-                _fileEncryptor.Encrypt(file);
+            _fileEncryptor.Encrypt(SelectedFiles);
         }
 
         private void DecryptSelectedFiles()
         {
-            foreach (var file in this.SelectedFiles)
-                _fileEncryptor.Decrypt(file);
+            _fileEncryptor.Decrypt(SelectedFiles);
         }
     }
 }
