@@ -9,12 +9,13 @@ using altCrypt.Core.x86.FileSystem;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using altCrypt.Business;
 
 namespace altCrypt.Client.Desktop.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        private readonly IEncryptFiles _fileEncryptor;
+        private readonly IFileProcessor _fileProcessor;
         public string ApplicationName { get; } = "altCrypt Desktop [Alpha]";
         public ICommand OnSelectFolderCommand { get; }
         public ICommand EncryptCommand { get; }
@@ -22,13 +23,12 @@ namespace altCrypt.Client.Desktop.ViewModel
 
         public ObservableCollection<IFile<Stream>> SelectedFiles { get; } = new ObservableCollection<IFile<Stream>>();
 
-
-        public MainViewModel(IEncryptFiles fileEncryptor)
+        public MainViewModel(IFileProcessor fileProcessor)
         {
-            if (fileEncryptor == null)
-                throw new ArgumentNullException(nameof(fileEncryptor));
+            if (fileProcessor == null)
+                throw new ArgumentNullException(nameof(fileProcessor));
 
-            _fileEncryptor = fileEncryptor;
+            _fileProcessor = fileProcessor;
 
             OnSelectFolderCommand = new RelayCommand(AddSelectedFilesToCollection);
             EncryptCommand = new RelayCommand(EncryptSelectedFiles);
@@ -54,12 +54,12 @@ namespace altCrypt.Client.Desktop.ViewModel
 
         private void EncryptSelectedFiles()
         {
-            _fileEncryptor.Encrypt(SelectedFiles);
+            _fileProcessor.Process(SelectedFiles);
         }
 
         private void DecryptSelectedFiles()
         {
-            _fileEncryptor.Decrypt(SelectedFiles);
+            _fileProcessor.ReverseProcess(SelectedFiles);
         }
     }
 }

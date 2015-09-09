@@ -4,6 +4,7 @@ using altCrypt.Core.x86.Encryption;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
+using altCrypt.Business;
 
 namespace altCrypt.Client.Desktop.ViewModel
 {
@@ -18,11 +19,15 @@ namespace altCrypt.Client.Desktop.ViewModel
                 //TODO
             }
             else
-            { 
+            {
+                string fileExtension = ".altCrypt";
                 SimpleIoc.Default.Register<IKey>(() => new Key("Pass@w0rd1")); //TODO accept input from user
                 SimpleIoc.Default.Register<IIV, RandomIV>();
                 SimpleIoc.Default.Register<SymmetricAlgorithm, AesCryptoServiceProvider>();
                 SimpleIoc.Default.Register<IEncryptFiles, StreamEncryptor>();
+
+                var encryptor = SimpleIoc.Default.GetInstance<IEncryptFiles>();
+                SimpleIoc.Default.Register<IFileProcessor>(() => new FileProcessor(fileExtension, encryptor));
             }
 
             SimpleIoc.Default.Register<MainViewModel>();

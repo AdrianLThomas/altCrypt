@@ -130,6 +130,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\altCrypt.Business\altCrypt.Business.csproj">
+      <Project>{e38c537b-b645-4096-90ca-f70d8d35eafe}</Project>
+      <Name>altCrypt.Business</Name>
+    </ProjectReference>
     <ProjectReference Include="..\altCrypt.Core.x86\altCrypt.Core.x86.csproj">
       <Project>{eb4f3e3d-6ba4-43e9-9ae6-fe3bf03d9219}</Project>
       <Name>altCrypt.Core.x86</Name>
