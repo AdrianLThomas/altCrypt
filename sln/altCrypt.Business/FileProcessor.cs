@@ -2,6 +2,7 @@
 using System.IO;
 using altCrypt.Core.FileSystem;
 using altCrypt.Core.Encryption;
+using System.Collections.Generic;
 
 namespace altCrypt.Business
 {
@@ -21,16 +22,34 @@ namespace altCrypt.Business
             _fileEncryptor = fileEncryptor;
         }
 
-        public void Process(IFile<Stream> file)
+        public void Process(IEnumerable<IFile<Stream>> files)
         {
-            if (file == null)
-                throw new ArgumentNullException(nameof(file));
+            if (files == null)
+                throw new ArgumentNullException(nameof(files));
 
-            string newFilenameWithoutExtension = Path.GetFileNameWithoutExtension(file.Name);
-            string newFilenameWithExtension = Path.Combine(newFilenameWithoutExtension, _processedExtension);
+            foreach (var file in files)
+            {
+                string currentFilename = Path.GetFileName(file.Name);
+                string newFilenameWithExtension = Path.Combine(currentFilename, _processedExtension);
 
-            _fileEncryptor.Encrypt(file);
-            file.Rename(newFilenameWithExtension);
+                _fileEncryptor.Encrypt(file);
+                file.Rename(newFilenameWithExtension);
+            }
+        }
+
+        public void ReverseProcess(IEnumerable<IFile<Stream>> files)
+        {
+            if (files == null)
+                throw new ArgumentNullException(nameof(files));
+
+            foreach (var file in files)
+            {
+                string currentFilename = Path.GetFileName(file.Name);
+                string originalFilename = Path.GetFileNameWithoutExtension(currentFilename);
+
+                _fileEncryptor.Decrypt(file);
+                file.Rename(originalFilename);
+            }
         }
     }
 }
