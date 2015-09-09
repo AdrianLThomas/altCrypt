@@ -5,11 +5,11 @@
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B3FE7680-4359-4FF1-A0EA-5A3CF98F1D50}</ProjectGuid>
+    <ProjectGuid>{E38C537B-B645-4096-90CA-F70D8D35EAFE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>altCrypt.Core</RootNamespace>
-    <AssemblyName>altCrypt.Core</AssemblyName>
+    <RootNamespace>altCrypt.Business</RootNamespace>
+    <AssemblyName>altCrypt.Business</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -35,20 +35,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .NET Framework is automatically included -->
     <None Include="project.json" />
+    <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Encryption\IEncryptFile.cs" />
-    <Compile Include="Encryption\IEncryptFiles.cs" />
-    <Compile Include="Encryption\IIV.cs" />
-    <Compile Include="Encryption\IKey.cs" />
-    <Compile Include="Encryption\Key.cs" />
-    <Compile Include="Extensions\StreamExtensions.cs" />
-    <Compile Include="FileSystem\IDirectory.cs" />
-    <Compile Include="FileSystem\IFile.cs" />
-    <Compile Include="Encryption\IEncryptToStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\altCrypt.Core\altCrypt.Core.csproj">
+      <Project>{b3fe7680-4359-4ff1-a0ea-5a3cf98f1d50}</Project>
+      <Name>altCrypt.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
