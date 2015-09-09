@@ -32,7 +32,7 @@ namespace altCrypt.Business
             foreach (var file in files)
             {
                 string currentFilename = Path.GetFileName(file.Name);
-                string newFilenameWithExtension = Path.Combine(currentFilename, _processedExtension);
+                string newFilenameWithExtension = string.Concat(currentFilename, _processedExtension);
 
                 file.Rename(newFilenameWithExtension);
             }
