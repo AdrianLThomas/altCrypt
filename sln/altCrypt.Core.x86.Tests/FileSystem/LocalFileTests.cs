@@ -49,5 +49,27 @@ namespace altCrypt.Core.x86.UnitTests.FileSystem
             //Act
             file.Write(stream); //Exception
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Rename_ThrowsArgumentNullException_WhenFilenameIsNull()
+        {
+            //Arrange
+            var file = new LocalFile(@"C:\TestPath");
+
+            //Act
+            file.Rename(null); //Assert
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Rename_ThrowsArgumentNullException_WhenFilenameIsEmpty()
+        {
+            //Arrange
+            var file = new LocalFile(@"C:\TestPath");
+
+            //Act
+            file.Rename(string.Empty); //Assert
+        }
     }
 }

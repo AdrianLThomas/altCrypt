@@ -59,5 +59,22 @@ namespace altCrypt.Core.x86.IntegrationTests.FileSystem
             //Assert
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void Rename_ChangesFilename_ToFilenameParameter()
+        {
+            //Arrange
+            string filename = "FileName.testdata";
+            File.Create(filename).Dispose();
+
+            string newFilename = Path.GetFileName(_path);
+            var file = new LocalFile(filename);
+            
+            //Act
+            file.Rename(newFilename);
+
+            //Assert
+            Assert.AreEqual(newFilename, file.Name);
+        }
     }
 }

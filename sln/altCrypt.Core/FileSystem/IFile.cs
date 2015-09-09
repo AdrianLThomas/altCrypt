@@ -8,5 +8,6 @@ namespace altCrypt.Core.FileSystem
         string FilePath { get; }
         void Write(Stream stream);
         T Read();
+        void Rename(string newFilename);
     }
 }
