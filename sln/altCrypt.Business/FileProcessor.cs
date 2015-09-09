@@ -8,10 +8,10 @@ namespace altCrypt.Business
 {
     public class FileProcessor : IFileProcessor
     {
-        private readonly IEncryptFile _fileEncryptor;
+        private readonly IEncryptFiles _fileEncryptor;
         private readonly string _processedExtension;
 
-        public FileProcessor(string processedExtension, IEncryptFile fileEncryptor)
+        public FileProcessor(string processedExtension, IEncryptFiles fileEncryptor)
         {
             if (string.IsNullOrEmpty(processedExtension))
                 throw new ArgumentNullException(nameof(processedExtension));
@@ -27,12 +27,13 @@ namespace altCrypt.Business
             if (files == null)
                 throw new ArgumentNullException(nameof(files));
 
+            _fileEncryptor.Encrypt(files);
+
             foreach (var file in files)
             {
                 string currentFilename = Path.GetFileName(file.Name);
                 string newFilenameWithExtension = Path.Combine(currentFilename, _processedExtension);
 
-                _fileEncryptor.Encrypt(file);
                 file.Rename(newFilenameWithExtension);
             }
         }
@@ -42,12 +43,13 @@ namespace altCrypt.Business
             if (files == null)
                 throw new ArgumentNullException(nameof(files));
 
+            _fileEncryptor.Decrypt(files);
+
             foreach (var file in files)
             {
                 string currentFilename = Path.GetFileName(file.Name);
                 string originalFilename = Path.GetFileNameWithoutExtension(currentFilename);
 
-                _fileEncryptor.Decrypt(file);
                 file.Rename(originalFilename);
             }
         }

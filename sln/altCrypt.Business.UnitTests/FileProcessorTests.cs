@@ -4,6 +4,7 @@ using Moq;
 using System.IO;
 using altCrypt.Core.FileSystem;
 using altCrypt.Core.Encryption;
+using System.Collections.Generic;
 
 namespace altCrypt.Business.UnitTests
 {
@@ -13,10 +14,10 @@ namespace altCrypt.Business.UnitTests
         private readonly string _processedExtension = ".altCryptTest";
 
         [TestMethod]
-        public void Process_RenamesFile_WhenFileParamIsValid()
+        public void Process_RenamesFiles_WhenFileParamIsValid()
         {
             //Arrange
-            var encryptor = Mock.Of<IEncryptFile>();
+            var encryptor = Mock.Of<IEncryptFiles>();
             var processor = new FileProcessor(_processedExtension, encryptor);
             var fileMock = new Mock<IFile<Stream>>();
             fileMock.Setup(m => m.Name).Returns("TestFile.txt");
@@ -29,10 +30,10 @@ namespace altCrypt.Business.UnitTests
         }
 
         [TestMethod]
-        public void Process_EncryptsFile_WhenFileParamIsValid()
+        public void Process_EncryptsFiles_WhenFileParamIsValid()
         {
             //Arrange
-            var encryptorMock = new Mock<IEncryptFile>();
+            var encryptorMock = new Mock<IEncryptFiles>();
 
             var fileMock = new Mock<IFile<Stream>>();
             fileMock.Setup(m => m.Name).Returns("TestFile.txt");
@@ -43,13 +44,13 @@ namespace altCrypt.Business.UnitTests
             processor.Process(new[] { fileMock.Object });
 
             //Assert
-            encryptorMock.Verify(x => x.Encrypt(It.IsAny<IFile<Stream>>()));
+            encryptorMock.Verify(x => x.Encrypt(It.IsAny<IEnumerable<IFile<Stream>>>()));
         }
 
-        public void ReverseProcess_RenamesFile_WhenFileParamIsValid()
+        public void ReverseProcess_RenamesFiles_WhenFileParamIsValid()
         {
             //Arrange
-            var encryptor = Mock.Of<IEncryptFile>();
+            var encryptor = Mock.Of<IEncryptFiles>();
             var processor = new FileProcessor(_processedExtension, encryptor);
             var fileMock = new Mock<IFile<Stream>>();
             fileMock.Setup(m => m.Name).Returns($"TestFile.txt{_processedExtension}");
@@ -65,7 +66,7 @@ namespace altCrypt.Business.UnitTests
         public void ReverseProcess_DecryptsFile_WhenFileParamIsValid()
         {
             //Arrange
-            var encryptorMock = new Mock<IEncryptFile>();
+            var encryptorMock = new Mock<IEncryptFiles>();
 
             var fileMock = new Mock<IFile<Stream>>();
             fileMock.Setup(m => m.Name).Returns($"TestFile.txt{_processedExtension}");
@@ -76,7 +77,7 @@ namespace altCrypt.Business.UnitTests
             processor.ReverseProcess(new[] { fileMock.Object });
 
             //Assert
-            encryptorMock.Verify(x => x.Decrypt(It.IsAny<IFile<Stream>>()));
+            encryptorMock.Verify(x => x.Decrypt(It.IsAny<IEnumerable<IFile<Stream>>>()));
         }
     }
 }
