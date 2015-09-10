@@ -1,6 +1,8 @@
 ﻿using altCrypt.Core.FileSystem;
+using altCrypt.Core.x86.Strings;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace altCrypt.Core.x86.FileSystem
 {
@@ -24,13 +26,28 @@ namespace altCrypt.Core.x86.FileSystem
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
             if (!stream.CanRead)
-                throw new ArgumentException("Can't read from stream");
+                throw new ArgumentException(ExceptionMessages.CantReadFromStream);
             
             using (var fileHandle = File.OpenWrite(_path))
             {
                 fileHandle.SetLength(0);
                 stream.Seek(0, SeekOrigin.Begin);
                 stream.CopyTo(fileHandle);
+                fileHandle.Flush();
+            }
+        }
+        public async Task WriteAsync(Stream stream)
+        {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+            if (!stream.CanRead)
+                throw new ArgumentException(ExceptionMessages.CantReadFromStream);
+
+            using (var fileHandle = File.OpenWrite(_path))
+            {
+                fileHandle.SetLength(0);
+                stream.Seek(0, SeekOrigin.Begin);
+                await stream.CopyToAsync(fileHandle);
                 fileHandle.Flush();
             }
         }

@@ -44,6 +44,11 @@
     <Compile Include="Encryption\FileEncryptor.cs" />
     <Compile Include="Encryption\RandomIV.cs" />
     <Compile Include="Encryption\StreamEncryptor.cs" />
+    <Compile Include="Strings\ExceptionMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExceptionMessages.resx</DependentUpon>
+    </Compile>
     <Compile Include="FileSystem\LocalDirectory.cs" />
     <Compile Include="FileSystem\LocalFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -53,6 +58,12 @@
       <Project>{b3fe7680-4359-4ff1-a0ea-5a3cf98f1d50}</Project>
       <Name>altCrypt.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Strings\ExceptionMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

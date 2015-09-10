@@ -8,6 +8,7 @@ namespace altCrypt.Core.FileSystem
         string Name { get; }
         string FilePath { get; }
         void Write(Stream stream);
+        Task WriteAsync(Stream stream);
         Stream Read();
     }
 }
