@@ -10,5 +10,6 @@ namespace altCrypt.Core.FileSystem
         void Write(Stream stream);
         Task WriteAsync(Stream stream);
         Stream Read();
+        void Rename(string newFilename);
     }
 }

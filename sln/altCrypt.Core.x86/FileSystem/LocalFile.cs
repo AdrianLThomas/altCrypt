@@ -8,7 +8,7 @@ namespace altCrypt.Core.x86.FileSystem
 {
     public class LocalFile : IFile
     {
-        private readonly string _path;
+        private string _path;
 
         public string Name => Path.GetFileName(_path);
         public string FilePath => _path;
@@ -53,5 +53,17 @@ namespace altCrypt.Core.x86.FileSystem
         }
 
         public Stream Read() => File.OpenRead(_path);
+
+        public void Rename(string newFilename)
+        {
+            if (string.IsNullOrEmpty(newFilename))
+                throw new ArgumentNullException(nameof(newFilename));
+
+            string directory = Path.GetDirectoryName(_path);
+            string destination = Path.Combine(directory, newFilename);
+            File.Move(_path, destination);
+
+            _path = destination;
+        }
     }
 }
