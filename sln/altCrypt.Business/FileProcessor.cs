@@ -3,6 +3,7 @@ using System.IO;
 using altCrypt.Core.FileSystem;
 using altCrypt.Core.Encryption;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace altCrypt.Business
 {
@@ -22,12 +23,12 @@ namespace altCrypt.Business
             _fileEncryptor = fileEncryptor;
         }
 
-        public void Process(IEnumerable<IFile<Stream>> files)
+        public async Task ProcessAsync(IEnumerable<IFile> files)
         {
             if (files == null)
                 throw new ArgumentNullException(nameof(files));
 
-            _fileEncryptor.Encrypt(files);
+            await _fileEncryptor.EncryptAsync(files);
 
             foreach (var file in files)
             {
@@ -38,12 +39,12 @@ namespace altCrypt.Business
             }
         }
 
-        public void ReverseProcess(IEnumerable<IFile<Stream>> files)
+        public async Task ReverseProcessAsync(IEnumerable<IFile> files)
         {
             if (files == null)
                 throw new ArgumentNullException(nameof(files));
 
-            _fileEncryptor.Decrypt(files);
+            await _fileEncryptor.DecryptAsync(files);
 
             foreach (var file in files)
             {
