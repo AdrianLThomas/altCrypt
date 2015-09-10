@@ -24,7 +24,7 @@ namespace altCrypt.Client.Desktop.ViewModel
                 SimpleIoc.Default.Register<IKey>(() => new Key("Pass@w0rd1")); //TODO accept input from user
                 SimpleIoc.Default.Register<IIV, RandomIV>();
                 SimpleIoc.Default.Register<SymmetricAlgorithm, AesCryptoServiceProvider>();
-                SimpleIoc.Default.Register<IEncryptFiles, StreamEncryptor>();
+                SimpleIoc.Default.Register<IEncryptFiles, FileEncryptor>();
 
                 var encryptor = SimpleIoc.Default.GetInstance<IEncryptFiles>();
                 SimpleIoc.Default.Register<IFileProcessor>(() => new FileProcessor(fileExtension, encryptor));
