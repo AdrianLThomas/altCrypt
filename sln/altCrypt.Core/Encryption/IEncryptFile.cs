@@ -1,11 +1,12 @@
 ﻿using System.IO;
 using altCrypt.Core.FileSystem;
+using System.Threading.Tasks;
 
 namespace altCrypt.Core.Encryption
 {
     public interface IEncryptFile
     {
-        void Encrypt(IFile file);
-        void Decrypt(IFile file);
+        Task EncryptAsync(IFile file);
+        Task DecryptAsync(IFile file);
     }
 }

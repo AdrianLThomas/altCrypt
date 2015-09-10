@@ -9,6 +9,8 @@ using altCrypt.Core.x86.FileSystem;
 using System.Linq.Expressions;
 using altCrypt.Client.CommandLine.Input;
 using altCrypt.Client.CommandLine.Parser;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace altCrypt.Client.CommandLine
 {
@@ -18,6 +20,19 @@ namespace altCrypt.Client.CommandLine
         private static FileEncryptor _encryptor;
 
         static void Main(string[] args)
+        {
+            CancellationTokenSource cts = new CancellationTokenSource();
+
+            Console.CancelKeyPress += (s, e) =>
+            {
+                e.Cancel = true;
+                cts.Cancel();
+            };
+
+            MainAsync(args, cts.Token).Wait();
+        }
+
+        static async Task MainAsync(string[] args, CancellationToken token)
         {
             Console.WriteLine($"altCrypt [Alpha] ({DateTime.Now.Year})");
             _args = new ArgsParser(args);
@@ -32,21 +47,21 @@ namespace altCrypt.Client.CommandLine
             Console.WriteLine($"Parameters:\r\n{_args.ToString()}");
             Console.WriteLine($"Started: {DateTime.Now}");
 
-            _encryptor = new FileEncryptor(new Key(_args.Key), new RandomIV(),  _args.Algorithm);
+            _encryptor = new FileEncryptor(new Key(_args.Key), new RandomIV(), _args.Algorithm);
 
             switch (_args.Command)
             {
                 case Command.Encrypt:
                     if (_args.Switches.HasFlag(Switch.Directory))
-                        EncryptDirectory();
+                        await EncryptDirectoryAsync();
                     else
-                        EncryptFile();
+                        await EncryptFileAsync();
                     break;
                 case Command.Decrypt:
                     if (_args.Switches.HasFlag(Switch.Directory))
-                        DecryptDirectory();
+                        await DecryptDirectoryAsync();
                     else
-                        DecryptFile();
+                        await DecryptFileAsync();
                     break;
             }
 
@@ -54,32 +69,32 @@ namespace altCrypt.Client.CommandLine
             if (System.Diagnostics.Debugger.IsAttached) Console.ReadLine();
         }
 
-        private static void EncryptFile()
+        private static async Task EncryptFileAsync()
         {
             IFile file = new LocalFile(_args.Path);
-            _encryptor.Encrypt(file);
+            await _encryptor.EncryptAsync(file);
         }
 
-        private static void DecryptFile()
+        private static async Task DecryptFileAsync()
         {
             IFile file = new LocalFile(_args.Path);
-            _encryptor.Decrypt(file);
+            await _encryptor.DecryptAsync(file);
         }
 
-        private static void EncryptDirectory()
+        private static async Task EncryptDirectoryAsync()
         {
             IDirectory directory = new LocalDirectory(_args.Path);
             IEnumerable<IFile> files = directory.GetFilesIncludingSubdirectories();
             foreach (var file in files)
-                _encryptor.Encrypt(file);
+                await _encryptor.EncryptAsync(file);
         }
 
-        private static void DecryptDirectory()
+        private static async Task DecryptDirectoryAsync()
         {
             IDirectory directory = new LocalDirectory(_args.Path);
             IEnumerable<IFile> files = directory.GetFilesIncludingSubdirectories();
             foreach (var file in files)
-                _encryptor.Decrypt(file);
+                await _encryptor.DecryptAsync(file);
         }
 
         private static string GetInstructions()

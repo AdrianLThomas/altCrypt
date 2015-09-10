@@ -4,6 +4,8 @@ using System.IO;
 using System.Security.Cryptography;
 using altCrypt.Core.Encryption;
 using altCrypt.Core.FileSystem;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace altCrypt.Core.x86.Encryption
 {
@@ -14,56 +16,50 @@ namespace altCrypt.Core.x86.Encryption
         {
         }
 
-        public void Encrypt(IFile file)
+        public async Task EncryptAsync(IFile file)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
 
-            Encrypt(new[] { file });
+            string tempFilename = $"{file.FilePath}.temp";
+            using (var stream = new FileStream(tempFilename, FileMode.OpenOrCreate))
+            {
+                this.EncryptToStream(file, stream);
+                await file.WriteAsync(stream);
+            }
+
+            File.Delete(tempFilename);
         }
 
-        public void Encrypt(IEnumerable<IFile> files)
+        public async Task EncryptAsync(IEnumerable<IFile> files)
         {
             if (files == null)
                 throw new ArgumentNullException(nameof(files));
 
-            foreach (var file in files)
-            {
-                string tempFilename = $"{file.FilePath}.temp";
-                using (var stream = new FileStream(tempFilename, FileMode.OpenOrCreate))
-                {
-                    this.EncryptToStream(file, stream);
-                    file.Write(stream);
-                }
-
-                File.Delete(tempFilename);
-            }
+            await Task.WhenAll(files.Select(EncryptAsync));
         }
 
-        public void Decrypt(IFile file)
+        public async Task DecryptAsync(IFile file)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
 
-            Decrypt(new[] { file });
+            string tempFilename = $"{file.FilePath}.temp";
+            using (var stream = new FileStream(tempFilename, FileMode.OpenOrCreate))
+            {
+                this.DecryptToStream(file, stream);
+                await file.WriteAsync(stream);
+            }
+
+            File.Delete(tempFilename);
         }
 
-        public void Decrypt(IEnumerable<IFile> files)
+        public async Task DecryptAsync(IEnumerable<IFile> files)
         {
             if (files == null)
                 throw new ArgumentNullException(nameof(files));
 
-            foreach (var file in files)
-            {
-                string tempFilename = $"{file.FilePath}.temp";
-                using (var stream = new FileStream(tempFilename, FileMode.OpenOrCreate))
-                {
-                    this.DecryptToStream(file, stream);
-                    file.Write(stream);
-                }
-
-                File.Delete(tempFilename);
-            }
+            await Task.WhenAll(files.Select(DecryptAsync));
         }
     }
 }

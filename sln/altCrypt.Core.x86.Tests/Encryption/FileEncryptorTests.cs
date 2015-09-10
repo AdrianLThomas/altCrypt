@@ -8,6 +8,7 @@ using altCrypt.Core.Extensions;
 using altCrypt.Core.x86.Encryption;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System.Threading.Tasks;
 using altCrypt.Core.FileSystem;
 
 namespace altCrypt.Core.x86.UnitTests.Encryption
@@ -35,34 +36,34 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Encrypt_ThrowsArgumentNullException_WhenFileParamIsNull()
+        public async Task EncryptAsync_ThrowsArgumentNullException_WhenFileParamIsNull()
         {
-            _fileEncryptor.Encrypt((IFile)null);
+            await _fileEncryptor.EncryptAsync((IFile)null);
         }
 
         [TestMethod]
-        public void Encrypt_CallsWriteOnFile_WhenFileParamIsValid()
+        public async Task EncryptAsync_CallsWriteOnFile_WhenFileParamIsValid()
         {
             //Arrange
             var fileMock = new Mock<IFile>();
             fileMock.Setup(m => m.Read()).Returns(GetUnencryptedTestStream);
 
             //Act
-            _fileEncryptor.Encrypt(fileMock.Object);
+            await _fileEncryptor.EncryptAsync(fileMock.Object);
 
             //Assert
-            fileMock.Verify(m => m.Write(It.IsAny<Stream>()));
+            fileMock.Verify(m => m.WriteAsync(It.IsAny<Stream>()));
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Encrypt_ThrowsArgumentNullException_WhenIEnumerableIsNull()
+        public async Task EncryptAsync_ThrowsArgumentNullException_WhenIEnumerableIsNull()
         {
-            _fileEncryptor.Encrypt((IEnumerable<IFile>)null);
+            await _fileEncryptor.EncryptAsync((IEnumerable<IFile>)null);
         }
 
         [TestMethod]
-        public void Encrypt_CallsWriteOnAllFiles_WhenIEnumerableIsValid()
+        public async Task EncryptAsync_CallsWriteOnAllFiles_WhenIEnumerableIsValid()
         {
             //Arrange
             var fileMocks = new List<Mock<IFile>>();
@@ -75,42 +76,42 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
             IEnumerable<IFile> files = fileMocks.Select(x => x.Object);
 
             //Act
-            _fileEncryptor.Encrypt(files);
+            await _fileEncryptor.EncryptAsync(files);
 
             //Assert
-            fileMocks.ForEach(x => x.Verify(m => m.Write(It.IsAny<Stream>())));
+            fileMocks.ForEach(x => x.Verify(m => m.WriteAsync(It.IsAny<Stream>())));
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Decrypt_ThrowsArgumentNullException_WhenFileParamIsNull()
+        public async Task DecryptAsync_ThrowsArgumentNullException_WhenFileParamIsNull()
         {
-            _fileEncryptor.Decrypt((IFile)null);
+            await _fileEncryptor.DecryptAsync((IFile)null);
         }
 
         [TestMethod]
-        public void Decrypt_CallsWriteOnFile_WhenFileParamIsValid()
+        public async Task DecryptAsync_CallsWriteOnFile_WhenFileParamIsValid()
         {
             //Arrange
             var fileMock = new Mock<IFile>();
             fileMock.Setup(m => m.Read()).Returns(GetEncryptedTestStream);
 
             //Act
-            _fileEncryptor.Decrypt(fileMock.Object);
+            await _fileEncryptor.DecryptAsync(fileMock.Object);
 
             //Assert
-            fileMock.Verify(m => m.Write(It.IsAny<Stream>()));
+            fileMock.Verify(m => m.WriteAsync(It.IsAny<Stream>()));
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Dencrypt_ThrowsArgumentNullException_WhenIEnumerableIsNull()
+        public async Task Dencrypt_ThrowsArgumentNullException_WhenIEnumerableIsNull()
         {
-            _fileEncryptor.Decrypt((IEnumerable<IFile>)null);
+            await _fileEncryptor.DecryptAsync((IEnumerable<IFile>)null);
         }
 
         [TestMethod]
-        public void Decrypt_CallsWriteOnAllFiles_WhenIEnumerableIsValid()
+        public async Task DecryptAsync_CallsWriteOnAllFiles_WhenIEnumerableIsValid()
         {
             //Arrange
             var fileMocks = new List<Mock<IFile>>();
@@ -123,13 +124,12 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
             IEnumerable<IFile> files = fileMocks.Select(x => x.Object);
 
             //Act
-            _fileEncryptor.Decrypt(files);
+            await _fileEncryptor.DecryptAsync(files);
 
             //Assert
-            fileMocks.ForEach(x => x.Verify(m => m.Write(It.IsAny<Stream>())));
+            fileMocks.ForEach(x => x.Verify(m => m.WriteAsync(It.IsAny<Stream>())));
         }
-
-
+        
         private MemoryStream GetUnencryptedTestStream()
         {
             byte[] bytes = TestConstants.UnencryptedData;
