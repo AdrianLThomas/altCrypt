@@ -15,7 +15,7 @@ namespace altCrypt.Client.CommandLine
     static class Program
     {
         private static IArgs _args;
-        private static StreamEncryptor _encryptor;
+        private static FileEncryptor _encryptor;
 
         static void Main(string[] args)
         {
@@ -32,7 +32,7 @@ namespace altCrypt.Client.CommandLine
             Console.WriteLine($"Parameters:\r\n{_args.ToString()}");
             Console.WriteLine($"Started: {DateTime.Now}");
 
-            _encryptor = new StreamEncryptor(new Key(_args.Key), new RandomIV(),  _args.Algorithm);
+            _encryptor = new FileEncryptor(new Key(_args.Key), new RandomIV(),  _args.Algorithm);
 
             switch (_args.Command)
             {
