@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -8,7 +7,7 @@ using altCrypt.Core.Extensions;
 using altCrypt.Core.x86.Encryption;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using IFileStream = altCrypt.Core.FileSystem.IFile<System.IO.Stream>;
+using altCrypt.Core.FileSystem;
 
 namespace altCrypt.Core.x86.UnitTests.Encryption
 {
@@ -19,8 +18,8 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
         private IKey _key;
         private IIV _iv;
         private StreamEncryptor _streamEncryptor;
-        private IFileStream _unencryptedFile;
-        private IFileStream _encryptedFile;
+        private IFile _unencryptedFile;
+        private IFile _encryptedFile;
 
         [TestInitialize]
         public void Initialise()
@@ -33,8 +32,8 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
             _iv = ivMock.Object;
             _key = Mock.Of<IKey>();
             _streamEncryptor = new StreamEncryptor(new Key("password"), _iv, _encryptionProvider);
-            _unencryptedFile = Mock.Of<IFileStream>(m => m.Read() == GetUnencryptedTestStream());
-            _encryptedFile = Mock.Of<IFileStream>(m => m.Read() == GetEncryptedTestStream());
+            _unencryptedFile = Mock.Of<IFile>(m => m.Read() == GetUnencryptedTestStream());
+            _encryptedFile = Mock.Of<IFile>(m => m.Read() == GetEncryptedTestStream());
         }
 
         [TestMethod]
@@ -69,7 +68,7 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
         [ExpectedException(typeof(ArgumentNullException))]
         public void EncryptToStream_ThrowsArgumentNullException_WhenStreamIsNull()
         {
-            _streamEncryptor.EncryptToStream(Mock.Of<IFileStream>(), null);
+            _streamEncryptor.EncryptToStream(Mock.Of<IFile>(), null);
         }
 
         [TestMethod]
@@ -119,7 +118,7 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
         [ExpectedException(typeof(ArgumentNullException))]
         public void DecryptToStream_ThrowsArgumentNullException_WhenStreamIsNull()
         {
-            _streamEncryptor.DecryptToStream(Mock.Of<IFileStream>(), null);
+            _streamEncryptor.DecryptToStream(Mock.Of<IFile>(), null);
         }
 
         [TestMethod]

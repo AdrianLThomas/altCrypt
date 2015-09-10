@@ -4,7 +4,7 @@ using System.IO;
 
 namespace altCrypt.Core.x86.FileSystem
 {
-    public class LocalFile : IFile<FileStream>
+    public class LocalFile : IFile
     {
         private readonly string _path;
 
@@ -35,6 +35,6 @@ namespace altCrypt.Core.x86.FileSystem
             }
         }
 
-        public FileStream Read() => File.OpenRead(_path);
+        public Stream Read() => File.OpenRead(_path);
     }
 }

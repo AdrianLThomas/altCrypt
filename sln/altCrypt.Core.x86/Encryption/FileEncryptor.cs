@@ -14,7 +14,7 @@ namespace altCrypt.Core.x86.Encryption
         {
         }
 
-        public void Encrypt(IFile<Stream> file)
+        public void Encrypt(IFile file)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
@@ -22,7 +22,7 @@ namespace altCrypt.Core.x86.Encryption
             Encrypt(new[] { file });
         }
 
-        public void Encrypt(IEnumerable<IFile<Stream>> files)
+        public void Encrypt(IEnumerable<IFile> files)
         {
             if (files == null)
                 throw new ArgumentNullException(nameof(files));
@@ -40,7 +40,7 @@ namespace altCrypt.Core.x86.Encryption
             }
         }
 
-        public void Decrypt(IFile<Stream> file)
+        public void Decrypt(IFile file)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
@@ -48,7 +48,7 @@ namespace altCrypt.Core.x86.Encryption
             Decrypt(new[] { file });
         }
 
-        public void Decrypt(IEnumerable<IFile<Stream>> files)
+        public void Decrypt(IEnumerable<IFile> files)
         {
             if (files == null)
                 throw new ArgumentNullException(nameof(files));

@@ -48,7 +48,7 @@ namespace altCrypt.Core.x86.IntegrationTests.FileSystem
             File.WriteAllText(_path, expected);
 
             //Act
-            using (FileStream myFile = file.Read())
+            using (Stream myFile = file.Read())
             {
                 using (var reader = new StreamReader(myFile))
                 {

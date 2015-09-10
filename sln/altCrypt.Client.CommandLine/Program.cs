@@ -56,28 +56,28 @@ namespace altCrypt.Client.CommandLine
 
         private static void EncryptFile()
         {
-            IFile<Stream> file = new LocalFile(_args.Path);
+            IFile file = new LocalFile(_args.Path);
             _encryptor.Encrypt(file);
         }
 
         private static void DecryptFile()
         {
-            IFile<Stream> file = new LocalFile(_args.Path);
+            IFile file = new LocalFile(_args.Path);
             _encryptor.Decrypt(file);
         }
 
         private static void EncryptDirectory()
         {
-            IDirectory<Stream> directory = new LocalDirectory(_args.Path);
-            IEnumerable<IFile<Stream>> files = directory.GetFilesIncludingSubdirectories();
+            IDirectory directory = new LocalDirectory(_args.Path);
+            IEnumerable<IFile> files = directory.GetFilesIncludingSubdirectories();
             foreach (var file in files)
                 _encryptor.Encrypt(file);
         }
 
         private static void DecryptDirectory()
         {
-            IDirectory<Stream> directory = new LocalDirectory(_args.Path);
-            IEnumerable<IFile<Stream>> files = directory.GetFilesIncludingSubdirectories();
+            IDirectory directory = new LocalDirectory(_args.Path);
+            IEnumerable<IFile> files = directory.GetFilesIncludingSubdirectories();
             foreach (var file in files)
                 _encryptor.Decrypt(file);
         }

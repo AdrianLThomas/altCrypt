@@ -26,7 +26,7 @@ namespace altCrypt.Core.x86.Encryption
             _encryptionProvider = encryptionProvider;
         }
 
-        public void EncryptToStream(IFile<Stream> file, Stream outputStream)
+        public void EncryptToStream(IFile file, Stream outputStream)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
@@ -50,7 +50,7 @@ namespace altCrypt.Core.x86.Encryption
             }
         }
 
-        public void DecryptToStream(IFile<Stream> file, Stream outputStream)
+        public void DecryptToStream(IFile file, Stream outputStream)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));

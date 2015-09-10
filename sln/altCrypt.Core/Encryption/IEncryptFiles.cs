@@ -6,7 +6,7 @@ namespace altCrypt.Core.Encryption
 {
     public interface IEncryptFiles
     {
-        void Encrypt(IEnumerable<IFile<Stream>> files);
-        void Decrypt(IEnumerable<IFile<Stream>> files);
+        void Encrypt(IEnumerable<IFile> files);
+        void Decrypt(IEnumerable<IFile> files);
     }
 }
