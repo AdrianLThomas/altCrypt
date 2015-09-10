@@ -6,7 +6,7 @@ using altCrypt.Core.FileSystem;
 
 namespace altCrypt.Core.x86.FileSystem
 {
-    public class LocalDirectory : IDirectory<FileStream>
+    public class LocalDirectory : IDirectory
     {
         public string Path { get; }
 
@@ -18,11 +18,11 @@ namespace altCrypt.Core.x86.FileSystem
             Path = path;
         }
 
-        public IEnumerable<IFile<FileStream>> GetFiles() => GetFiles(SearchOption.TopDirectoryOnly);
+        public IEnumerable<IFile> GetFiles() => GetFiles(SearchOption.TopDirectoryOnly);
 
-        public IEnumerable<IFile<FileStream>> GetFilesIncludingSubdirectories() => GetFiles(SearchOption.AllDirectories);
+        public IEnumerable<IFile> GetFilesIncludingSubdirectories() => GetFiles(SearchOption.AllDirectories);
 
-        private IEnumerable<IFile<FileStream>> GetFiles(SearchOption searchOption)
+        private IEnumerable<IFile> GetFiles(SearchOption searchOption)
         {
             string[] files = Directory.GetFiles(Path, "*.*", searchOption);
 

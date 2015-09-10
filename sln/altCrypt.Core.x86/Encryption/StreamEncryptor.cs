@@ -1,15 +1,12 @@
 ﻿using altCrypt.Core.Encryption;
-using altCrypt.Core.Extensions;
 using altCrypt.Core.FileSystem;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Security.Cryptography;
 
 namespace altCrypt.Core.x86.Encryption
 {
-    public class StreamEncryptor : IEncryptToStream, IEncryptFile, IEncryptFiles
+    public class StreamEncryptor : IEncryptToStream
     {
         private readonly IKey _key;
         private readonly IIV _iv;
@@ -29,7 +26,7 @@ namespace altCrypt.Core.x86.Encryption
             _encryptionProvider = encryptionProvider;
         }
 
-        public void EncryptToStream(IFile<Stream> file, Stream outputStream)
+        public void EncryptToStream(IFile file, Stream outputStream)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
@@ -53,7 +50,7 @@ namespace altCrypt.Core.x86.Encryption
             }
         }
 
-        public void DecryptToStream(IFile<Stream> file, Stream outputStream)
+        public void DecryptToStream(IFile file, Stream outputStream)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
@@ -76,58 +73,6 @@ namespace altCrypt.Core.x86.Encryption
                 {
                     cryptoStream.CopyTo(outputStream);
                 }
-            }
-        }
-
-        public void Encrypt(IFile<Stream> file)
-        {
-            if (file == null)
-                throw new ArgumentNullException(nameof(file));
-
-            Encrypt(new[] { file });
-        }
-
-        public void Encrypt(IEnumerable<IFile<Stream>> files)
-        {
-            if (files == null)
-                throw new ArgumentNullException(nameof(files));
-
-            foreach (var file in files)
-            {
-                string tempFilename = $"{file.FilePath}.temp";
-                using (var stream = new FileStream(tempFilename, FileMode.OpenOrCreate))
-                {
-                    this.EncryptToStream(file, stream);
-                    file.Write(stream);
-                }
-
-                File.Delete(tempFilename);
-            }
-        }
-
-        public void Decrypt(IFile<Stream> file)
-        {
-            if (file == null)
-                throw new ArgumentNullException(nameof(file));
-
-            Decrypt(new[] { file });
-        }
-
-        public void Decrypt(IEnumerable<IFile<Stream>> files)
-        {
-            if (files == null)
-                throw new ArgumentNullException(nameof(files));
-
-            foreach (var file in files)
-            {
-                string tempFilename = $"{file.FilePath}.temp";
-                using (var stream = new FileStream(tempFilename, FileMode.OpenOrCreate))
-                {
-                    this.DecryptToStream(file, stream);
-                    file.Write(stream);
-                }
-
-                File.Delete(tempFilename);
             }
         }
     }

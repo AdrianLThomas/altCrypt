@@ -1,12 +1,15 @@
 ﻿using altCrypt.Core.FileSystem;
+using altCrypt.Core.x86.Strings;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace altCrypt.Core.x86.FileSystem
 {
-    public class LocalFile : IFile<FileStream>
+    public class LocalFile : IFile
     {
-        private string _path;
+        private readonly string _path;
+
         public string Name => Path.GetFileName(_path);
         public string FilePath => _path;
 
@@ -23,7 +26,7 @@ namespace altCrypt.Core.x86.FileSystem
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
             if (!stream.CanRead)
-                throw new ArgumentException("Can't read from stream");
+                throw new ArgumentException(ExceptionMessages.CantReadFromStream);
             
             using (var fileHandle = File.OpenWrite(_path))
             {
@@ -33,19 +36,22 @@ namespace altCrypt.Core.x86.FileSystem
                 fileHandle.Flush();
             }
         }
-
-        public FileStream Read() => File.OpenRead(_path);
-
-        public void Rename(string newFilename)
+        public async Task WriteAsync(Stream stream)
         {
-            if (string.IsNullOrEmpty(newFilename))
-                throw new ArgumentNullException(nameof(newFilename));
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+            if (!stream.CanRead)
+                throw new ArgumentException(ExceptionMessages.CantReadFromStream);
 
-            string directory = Path.GetDirectoryName(_path);
-            string destination = Path.Combine(directory, newFilename);
-            File.Move(_path, destination);
-
-            _path = destination;
+            using (var fileHandle = File.OpenWrite(_path))
+            {
+                fileHandle.SetLength(0);
+                stream.Seek(0, SeekOrigin.Begin);
+                await stream.CopyToAsync(fileHandle);
+                fileHandle.Flush();
+            }
         }
+
+        public Stream Read() => File.OpenRead(_path);
     }
 }

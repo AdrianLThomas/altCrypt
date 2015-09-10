@@ -1,13 +1,14 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 
 namespace altCrypt.Core.FileSystem
 {
-    public interface IFile<out T> where T : Stream
+    public interface IFile
     {
         string Name { get; }
         string FilePath { get; }
         void Write(Stream stream);
-        T Read();
-        void Rename(string newFilename);
+        Task WriteAsync(Stream stream);
+        Stream Read();
     }
 }

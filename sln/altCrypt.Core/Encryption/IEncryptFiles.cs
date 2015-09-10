@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using altCrypt.Core.FileSystem;
+using System.Threading.Tasks;
 
 namespace altCrypt.Core.Encryption
 {
     public interface IEncryptFiles
     {
-        void Encrypt(IEnumerable<IFile<Stream>> files);
-        void Decrypt(IEnumerable<IFile<Stream>> files);
+        Task EncryptAsync(IEnumerable<IFile> files);
+        Task DecryptAsync(IEnumerable<IFile> files);
     }
 }

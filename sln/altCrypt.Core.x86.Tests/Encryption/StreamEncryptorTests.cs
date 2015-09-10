@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -8,24 +7,19 @@ using altCrypt.Core.Extensions;
 using altCrypt.Core.x86.Encryption;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using IFileStream = altCrypt.Core.FileSystem.IFile<System.IO.Stream>;
+using altCrypt.Core.FileSystem;
 
 namespace altCrypt.Core.x86.UnitTests.Encryption
 {
     [TestClass]
     public class StreamEncryptorTests
     {
-        private readonly byte[] _ivData = { 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255 };
-        private readonly byte[] _unencryptedData = { 1, 2, 3 };
-        private readonly byte[] _encryptedData = { 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, /*<- IV bytes*/
-                                                   255, 129, 97, 155, 60, 235, 240, 133, 241, 13, 67, 72, 241, 82, 10, 0 /*<- Encrypted content*/};
-
         private SymmetricAlgorithm _encryptionProvider;
         private IKey _key;
         private IIV _iv;
         private StreamEncryptor _streamEncryptor;
-        private IFileStream _unencryptedFile;
-        private IFileStream _encryptedFile;
+        private IFile _unencryptedFile;
+        private IFile _encryptedFile;
 
         [TestInitialize]
         public void Initialise()
@@ -33,13 +27,13 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
             _encryptionProvider = Aes.Create();
 
             var ivMock = new Mock<IIV>();
-            ivMock.Setup(m => m.GenerateIV(It.IsAny<int>())).Returns(_ivData);
+            ivMock.Setup(m => m.GenerateIV(It.IsAny<int>())).Returns(TestConstants.IvData);
 
             _iv = ivMock.Object;
             _key = Mock.Of<IKey>();
             _streamEncryptor = new StreamEncryptor(new Key("password"), _iv, _encryptionProvider);
-            _unencryptedFile = Mock.Of<IFileStream>(m => m.Read() == GetUnencryptedTestStream());
-            _encryptedFile = Mock.Of<IFileStream>(m => m.Read() == GetEncryptedTestStream());
+            _unencryptedFile = Mock.Of<IFile>(m => m.Read() == GetUnencryptedTestStream());
+            _encryptedFile = Mock.Of<IFile>(m => m.Read() == GetEncryptedTestStream());
         }
 
         [TestMethod]
@@ -74,14 +68,14 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
         [ExpectedException(typeof(ArgumentNullException))]
         public void EncryptToStream_ThrowsArgumentNullException_WhenStreamIsNull()
         {
-            _streamEncryptor.EncryptToStream(Mock.Of<IFileStream>(), null);
+            _streamEncryptor.EncryptToStream(Mock.Of<IFile>(), null);
         }
 
         [TestMethod]
         public void EncryptToStream_ReturnsStreamWithExpectedLength_WhenFileParamIsValid()
         {
             //Arrange
-            long expected = _encryptedData.Length;
+            long expected = TestConstants.EncryptedData.Length;
             long actual;
 
             using (var memStream = new MemoryStream())
@@ -99,7 +93,7 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
         public void EncryptToStream_OutputsExpectedEncryptedStream_WhenFileParamIsValid()
         {
             //Arrange
-            byte[] expected = _encryptedData;
+            byte[] expected = TestConstants.EncryptedData;
             byte[] actual;
 
             using (var memStream = new MemoryStream())
@@ -124,14 +118,14 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
         [ExpectedException(typeof(ArgumentNullException))]
         public void DecryptToStream_ThrowsArgumentNullException_WhenStreamIsNull()
         {
-            _streamEncryptor.DecryptToStream(Mock.Of<IFileStream>(), null);
+            _streamEncryptor.DecryptToStream(Mock.Of<IFile>(), null);
         }
 
         [TestMethod]
         public void DecryptToStream_ReturnsExpectedDecryptedStream_WhenFileParamIsValid()
         {
             //Arrange
-            byte[] expected = _unencryptedData;
+            byte[] expected = TestConstants.UnencryptedData;
             byte[] actual;
 
             //Act
@@ -144,107 +138,10 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
             //Assert
             Assert.IsTrue(actual.SequenceEqual(expected));
         }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Encrypt_ThrowsArgumentNullException_WhenFileParamIsNull()
-        {
-            _streamEncryptor.Encrypt((IFileStream)null);
-        }
-
-        [TestMethod]
-        public void Encrypt_CallsWriteOnFile_WhenFileParamIsValid()
-        {
-            //Arrange
-            var fileMock = new Mock<IFileStream>();
-            fileMock.Setup(m => m.Read()).Returns(GetUnencryptedTestStream);
-
-            //Act
-            _streamEncryptor.Encrypt(fileMock.Object);
-
-            //Assert
-            fileMock.Verify(m => m.Write(It.IsAny<Stream>()));
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Encrypt_ThrowsArgumentNullException_WhenIEnumerableIsNull()
-        {
-            _streamEncryptor.Encrypt((IEnumerable<IFileStream>)null);
-        }
-
-        [TestMethod]
-        public void Encrypt_CallsWriteOnAllFiles_WhenIEnumerableIsValid()
-        {
-            //Arrange
-            var fileMocks = new List<Mock<IFileStream>>();
-            for (int i = 0; i < 3; ++i)
-            {
-                var fileMock = new Mock<IFileStream>();
-                fileMock.Setup(m => m.Read()).Returns(GetUnencryptedTestStream);
-                fileMocks.Add(fileMock);
-            }
-            IEnumerable<IFileStream> files = fileMocks.Select(x => x.Object);
-
-            //Act
-            _streamEncryptor.Encrypt(files);
-
-            //Assert
-            fileMocks.ForEach(x => x.Verify(m => m.Write(It.IsAny<Stream>())));
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Decrypt_ThrowsArgumentNullException_WhenFileParamIsNull()
-        {
-            _streamEncryptor.Decrypt((IFileStream)null);
-        }
-
-        [TestMethod]
-        public void Decrypt_CallsWriteOnFile_WhenFileParamIsValid()
-        {
-            //Arrange
-            var fileMock = new Mock<IFileStream>();
-            fileMock.Setup(m => m.Read()).Returns(GetEncryptedTestStream);
-
-            //Act
-            _streamEncryptor.Decrypt(fileMock.Object);
-
-            //Assert
-            fileMock.Verify(m => m.Write(It.IsAny<Stream>()));
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Dencrypt_ThrowsArgumentNullException_WhenIEnumerableIsNull()
-        {
-            _streamEncryptor.Decrypt((IEnumerable<IFileStream>)null);
-        }
-
-        [TestMethod]
-        public void Decrypt_CallsWriteOnAllFiles_WhenIEnumerableIsValid()
-        {
-            //Arrange
-            var fileMocks = new List<Mock<IFileStream>>();
-            for (int i = 0; i < 3; ++i)
-            {
-                var fileMock = new Mock<IFileStream>();
-                fileMock.Setup(m => m.Read()).Returns(GetEncryptedTestStream);
-                fileMocks.Add(fileMock);
-            }
-            IEnumerable<IFileStream> files = fileMocks.Select(x => x.Object);
-
-            //Act
-            _streamEncryptor.Decrypt(files);
-
-            //Assert
-            fileMocks.ForEach(x => x.Verify(m => m.Write(It.IsAny<Stream>())));
-        }
-
-
+        
         private MemoryStream GetUnencryptedTestStream()
         {
-            byte[] bytes = _unencryptedData;
+            byte[] bytes = TestConstants.UnencryptedData;
 
             var memStream = new MemoryStream();
             memStream.Write(bytes, 0, bytes.Length);
@@ -253,7 +150,7 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
 
         private MemoryStream GetEncryptedTestStream()
         {
-            byte[] bytes = _encryptedData;
+            byte[] bytes = TestConstants.UnencryptedData;
 
             var memStream = new MemoryStream();
             memStream.Write(bytes, 0, bytes.Length);
