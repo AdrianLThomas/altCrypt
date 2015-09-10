@@ -16,7 +16,7 @@ namespace altCrypt.Client.Desktop.ViewModel
     {
         public string ApplicationName { get; } = "altCrypt Desktop [Alpha]";
         public ICommand OnSelectFolderCommand { get; }
-        public ObservableCollection<IFile<Stream>> SelectedFiles { get; } = new ObservableCollection<IFile<Stream>>();
+        public ObservableCollection<IFile> SelectedFiles { get; } = new ObservableCollection<IFile>();
 
         public MainViewModel()
         {
@@ -35,7 +35,7 @@ namespace altCrypt.Client.Desktop.ViewModel
                 string folderPath = dialog.FileNames.Single();
                 var directory = new LocalDirectory(folderPath);
 
-                foreach (IFile<Stream> file in directory.GetFilesIncludingSubdirectories())
+                foreach (IFile file in directory.GetFilesIncludingSubdirectories())
                     SelectedFiles.Add(file);
             }
         }
