@@ -10,6 +10,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using altCrypt.Business;
+using System.Threading.Tasks;
 
 namespace altCrypt.Client.Desktop.ViewModel
 {
@@ -31,8 +32,8 @@ namespace altCrypt.Client.Desktop.ViewModel
             _fileProcessor = fileProcessor;
 
             OnSelectFolderCommand = new RelayCommand(AddSelectedFilesToCollection);
-            EncryptCommand = new RelayCommand(EncryptSelectedFiles);
-            DecryptCommand = new RelayCommand(DecryptSelectedFiles);
+            EncryptCommand = new RelayCommand(async () => await EncryptSelectedFilesAsync());
+            DecryptCommand = new RelayCommand(async () => await DecryptSelectedFilesAsync());
         }
 
         private void AddSelectedFilesToCollection()
@@ -52,14 +53,14 @@ namespace altCrypt.Client.Desktop.ViewModel
             }
         }
 
-        private void EncryptSelectedFiles()
+        private async Task EncryptSelectedFilesAsync()
         {
-            _fileProcessor.Process(SelectedFiles);
+            await _fileProcessor.ProcessAsync(SelectedFiles);
         }
 
-        private void DecryptSelectedFiles()
+        private async Task DecryptSelectedFilesAsync()
         {
-            _fileProcessor.ReverseProcess(SelectedFiles);
+            await _fileProcessor.ReverseProcessAsync(SelectedFiles);
         }
     }
 }

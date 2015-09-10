@@ -3,15 +3,16 @@ using System.IO;
 using altCrypt.Core.FileSystem;
 using altCrypt.Core.Encryption;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace altCrypt.Business
 {
     public class FileProcessor : IFileProcessor
     {
-        private readonly IEncryptFile _fileEncryptor;
+        private readonly IEncryptFiles _fileEncryptor;
         private readonly string _processedExtension;
 
-        public FileProcessor(string processedExtension, IEncryptFile fileEncryptor)
+        public FileProcessor(string processedExtension, IEncryptFiles fileEncryptor)
         {
             if (string.IsNullOrEmpty(processedExtension))
                 throw new ArgumentNullException(nameof(processedExtension));
@@ -22,32 +23,34 @@ namespace altCrypt.Business
             _fileEncryptor = fileEncryptor;
         }
 
-        public void Process(IEnumerable<IFile<Stream>> files)
+        public async Task ProcessAsync(IEnumerable<IFile> files)
         {
             if (files == null)
                 throw new ArgumentNullException(nameof(files));
+
+            await _fileEncryptor.EncryptAsync(files);
 
             foreach (var file in files)
             {
                 string currentFilename = Path.GetFileName(file.Name);
-                string newFilenameWithExtension = Path.Combine(currentFilename, _processedExtension);
+                string newFilenameWithExtension = string.Concat(currentFilename, _processedExtension);
 
-                _fileEncryptor.Encrypt(file);
                 file.Rename(newFilenameWithExtension);
             }
         }
 
-        public void ReverseProcess(IEnumerable<IFile<Stream>> files)
+        public async Task ReverseProcessAsync(IEnumerable<IFile> files)
         {
             if (files == null)
                 throw new ArgumentNullException(nameof(files));
+
+            await _fileEncryptor.DecryptAsync(files);
 
             foreach (var file in files)
             {
                 string currentFilename = Path.GetFileName(file.Name);
                 string originalFilename = Path.GetFileNameWithoutExtension(currentFilename);
 
-                _fileEncryptor.Decrypt(file);
                 file.Rename(originalFilename);
             }
         }
