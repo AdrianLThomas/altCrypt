@@ -55,11 +55,13 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Encryption\FileEncryptorTests.cs" />
     <Compile Include="Encryption\RandomIVTests.cs" />
     <Compile Include="Encryption\StreamEncryptorTests.cs" />
     <Compile Include="FileSystem\LocalDirectoryTests.cs" />
     <Compile Include="FileSystem\LocalFileTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestConstants.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\altCrypt.Core.x86\altCrypt.Core.x86.csproj">
