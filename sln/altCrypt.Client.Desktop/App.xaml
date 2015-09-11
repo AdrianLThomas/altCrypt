@@ -10,7 +10,8 @@
     <Application.Resources>
         <ResourceDictionary>
             <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" xmlns:vm="clr-namespace:altCrypt.Client.Desktop.ViewModel" />
-            <converters:NegateBoolConverter x:Key="negateBoolConverter"/>
+            <converters:NegateBoolConverter x:Key="NegateBoolConverter"/>
+            <BooleanToVisibilityConverter x:Key="BoolToVisConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

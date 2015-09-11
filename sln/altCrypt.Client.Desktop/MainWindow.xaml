@@ -20,10 +20,11 @@
 
         <TabControl Grid.Row="1">
             <TabItem Header="Encrypt Files">
-                <Grid IsEnabled="{Binding IsProcessing, Converter={StaticResource negateBoolConverter}}">
+                <Grid IsEnabled="{Binding IsProcessing, Converter={StaticResource NegateBoolConverter}}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="10,10">
@@ -43,6 +44,7 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
 
+                    <TextBlock Grid.Row="2" Visibility="{Binding IsProcessing, Converter={StaticResource BoolToVisConverter}}">Processing...</TextBlock>
                 </Grid>
             </TabItem>
             <TabItem Header="Settings" IsEnabled="False"/>
