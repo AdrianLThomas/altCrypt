@@ -36,7 +36,10 @@ namespace altCrypt.Core.x86.Encryption
             if (files == null)
                 throw new ArgumentNullException(nameof(files));
 
-            await Task.WhenAll(files.Select(EncryptAsync));
+            foreach (var file in files)
+            {
+                await EncryptAsync(file);
+            }
         }
 
         public async Task DecryptAsync(IFile file)
@@ -59,7 +62,10 @@ namespace altCrypt.Core.x86.Encryption
             if (files == null)
                 throw new ArgumentNullException(nameof(files));
 
-            await Task.WhenAll(files.Select(DecryptAsync));
+            foreach (var file in files)
+            {
+                await DecryptAsync(file);
+            }
         }
     }
 }
