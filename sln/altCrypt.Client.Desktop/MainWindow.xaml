@@ -20,7 +20,7 @@
 
         <TabControl Grid.Row="1">
             <TabItem Header="Encrypt Files">
-                <Grid>
+                <Grid IsEnabled="{Binding IsProcessing, Converter={StaticResource negateBoolConverter}}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>

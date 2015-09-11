@@ -41,31 +41,34 @@ namespace altCrypt.Client.CommandLine
             if (_args.IsError)
             {
                 Console.WriteLine(instructions);
-                return;
             }
-
-            Console.WriteLine($"Parameters:\r\n{_args.ToString()}");
-            Console.WriteLine($"Started: {DateTime.Now}");
-
-            _encryptor = new FileEncryptor(new Key(_args.Key), new RandomIV(), _args.Algorithm);
-
-            switch (_args.Command)
+            else
             {
-                case Command.Encrypt:
-                    if (_args.Switches.HasFlag(Switch.Directory))
-                        await EncryptDirectoryAsync();
-                    else
-                        await EncryptFileAsync();
-                    break;
-                case Command.Decrypt:
-                    if (_args.Switches.HasFlag(Switch.Directory))
-                        await DecryptDirectoryAsync();
-                    else
-                        await DecryptFileAsync();
-                    break;
+
+                Console.WriteLine($"Parameters:\r\n{_args.ToString()}");
+                Console.WriteLine($"Started: {DateTime.Now}");
+
+                _encryptor = new FileEncryptor(new Key(_args.Key), new RandomIV(), _args.Algorithm);
+
+                switch (_args.Command)
+                {
+                    case Command.Encrypt:
+                        if (_args.Switches.HasFlag(Switch.Directory))
+                            await EncryptDirectoryAsync();
+                        else
+                            await EncryptFileAsync();
+                        break;
+                    case Command.Decrypt:
+                        if (_args.Switches.HasFlag(Switch.Directory))
+                            await DecryptDirectoryAsync();
+                        else
+                            await DecryptFileAsync();
+                        break;
+                }
+
+                Console.WriteLine($"Finished: {DateTime.Now}");
             }
 
-            Console.WriteLine($"Finished: {DateTime.Now}");
             if (System.Diagnostics.Debugger.IsAttached) Console.ReadLine();
         }
 

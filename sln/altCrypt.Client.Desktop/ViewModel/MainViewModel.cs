@@ -17,10 +17,17 @@ namespace altCrypt.Client.Desktop.ViewModel
     public class MainViewModel : ViewModelBase
     {
         private readonly IFileProcessor _fileProcessor;
+        private bool _isProcessing;
+
         public string ApplicationName { get; } = "altCrypt Desktop [Alpha]";
         public ICommand OnSelectFolderCommand { get; }
         public ICommand EncryptCommand { get; }
         public ICommand DecryptCommand { get; }
+        public bool IsProcessing
+        {
+            get { return _isProcessing; }
+            set { Set(nameof(IsProcessing), ref _isProcessing, value); }
+        }
 
         public ObservableCollection<IFile> SelectedFiles { get; } = new ObservableCollection<IFile>();
 
@@ -55,12 +62,21 @@ namespace altCrypt.Client.Desktop.ViewModel
 
         private async Task EncryptSelectedFilesAsync()
         {
-            await _fileProcessor.ProcessAsync(SelectedFiles);
+            await PerformProcessing(_fileProcessor.ProcessAsync(SelectedFiles));
         }
 
         private async Task DecryptSelectedFilesAsync()
         {
-            await _fileProcessor.ReverseProcessAsync(SelectedFiles);
+            await PerformProcessing(_fileProcessor.ReverseProcessAsync(SelectedFiles));
+        }
+
+        private async Task PerformProcessing(Task task)
+        {
+            IsProcessing = true;
+
+            await task;
+
+            IsProcessing = false;
         }
     }
 }
