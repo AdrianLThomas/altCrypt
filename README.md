@@ -1,5 +1,5 @@
 # altCrypt
-Symmetric file encryption/decryption library for .NET
+Symmetric file encryption/decryption library for .NET. No messing around with streams - this library does that for you!
 
 This is currently in alpha. Breaking changes will be ongoing.
 
