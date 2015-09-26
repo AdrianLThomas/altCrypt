@@ -70,12 +70,10 @@ namespace altCrypt.Core.x86.IntegrationTests.FileSystem
             File.WriteAllText(_path, expected);
 
             //Act
-            using (Stream myFile = file.Read())
+            Stream myFile = file.Read();
+            using (var reader = new StreamReader(myFile))
             {
-                using (var reader = new StreamReader(myFile))
-                {
-                    actual = reader.ReadToEnd();
-                }
+                actual = reader.ReadToEnd();
             }
 
             //Assert

@@ -60,19 +60,18 @@ namespace altCrypt.Core.x86.Encryption
             //Read IV
             int ivSize = _encryptionProvider.BlockSize / 8;
             byte[] iv = new byte[ivSize];
-            using (var fileData = file.Read())
+            var fileData = file.Read();
+
+            fileData.Seek(0, SeekOrigin.Begin);
+            fileData.Read(iv, 0, iv.Length);
+
+            //Write decrypted data
+            byte[] key = _key.GenerateBlock(_encryptionProvider.BlockSize);
+            ICryptoTransform decryptor = _encryptionProvider.CreateDecryptor(key, iv);
+
+            using (var cryptoStream = new CryptoStream(fileData, decryptor, CryptoStreamMode.Read))
             {
-                fileData.Seek(0, SeekOrigin.Begin);
-                fileData.Read(iv, 0, iv.Length);
-
-                //Write decrypted data
-                byte[] key = _key.GenerateBlock(_encryptionProvider.BlockSize);
-                ICryptoTransform decryptor = _encryptionProvider.CreateDecryptor(key, iv);
-
-                using (var cryptoStream = new CryptoStream(fileData, decryptor, CryptoStreamMode.Read))
-                {
-                    cryptoStream.CopyTo(outputStream);
-                }
+                cryptoStream.CopyTo(outputStream);
             }
         }
     }
