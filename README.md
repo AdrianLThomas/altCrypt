@@ -11,11 +11,12 @@ It currently only supports the full version of .NET but a WinRT / Universal solu
 
 ## Sample Usage
 ```c#
-    IFile file = new LocalFile(@"C:\temp\MyFile.txt");     //1. Select a file to be encrypted
-    IKey key = new Key("Pass@w0rd1");                      //2. Create a key
-    IIV iv = new RandomIV();                               //3. Choose how you want an IV / nonce to be generated per file
-    SymmetricAlgorithm algorithm = Aes.Create();           //4. Choose the algorithm you would like to use
-    var encryptor = new FileEncryptor(key, iv, algorithm); //5. Create the encryptor
-    await encryptor.EncryptAsync(file);                    //6. Encrypt the file
-    await encryptor.DecryptAsync(file);                    //7. Decrypt the file
+    IFile file = new LocalFile(@"C:\temp\MyFile.txt");         //1. Select a file to be encrypted
+    IKey key = new Key("Pass@w0rd1");                          //2. Create a key
+    IIV iv = new RandomIV();                                   //3. Choose how you want an IV / nonce to be generated per file
+    using(SymmetricAlgorithm algorithm = Aes.Create());{       //4. Choose the algorithm you would like to use
+        var encryptor = new FileEncryptor(key, iv, algorithm); //5. Create the encryptor
+        await encryptor.EncryptAsync(file);                    //6. Encrypt the file
+        await encryptor.DecryptAsync(file);                    //7. Decrypt the file
+    }
 ```
