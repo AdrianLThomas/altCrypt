@@ -87,7 +87,6 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
             var iv = new RandomIV();
             int blockSize = 128;
 
-            const int expected = 16;
             byte[] iv1;
             byte[] iv2;
 
