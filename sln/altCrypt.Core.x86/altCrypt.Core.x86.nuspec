@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>0.1.0.0</version>
+    <title>$title$</title>
+    <authors>Adrian L Thomas</authors>
+    <owners>Adrian L Thomas</owners>
+    <projectUrl>https://github.com/AdrianLThomas/altCrypt</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Symmetric file encryption/decryption library</description>
+    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>Encryption Decryption Library .NET</tags>
+    
+    <!--To update-->
+    <!--<licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>-->
+    <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
+  </metadata>
+</package>
