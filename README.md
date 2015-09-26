@@ -1,11 +1,10 @@
 # altCrypt
-Symmetric file encryption/decryption library for .NET. No messing around with streams - this library does that for you! (but you're welcome to continue using them too).
+A highly flexible symmetric file encryption/decryption library for .NET. No messing around with streams - this library does that for you! (but you're welcome to continue using them too).
 
 The library can be used in your own applications.
-Or you can use the command line utility to encrypt your files manually.
-GUI's are a work in progress.
+Or you can use the command line utility to encrypt your files and directories manually.
 
-It currently only supports the full version of .NET but a WinRT / Universal solution is in the pipeline.
+It currently only supports the full version of .NET (4.6) but a WinRT / Universal solution is in the pipeline.
 
 ## Sample Usage
 ```c#
