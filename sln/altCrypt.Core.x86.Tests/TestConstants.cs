@@ -9,8 +9,8 @@ namespace altCrypt.Core.x86.UnitTests
     public static class TestConstants
     {
         public static readonly byte[] IvData = { 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255 };
-        public static readonly byte[] UnencryptedData = { 1, 2, 3 };
-        public static readonly byte[] EncryptedData = { 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, /*<- IV bytes*/
-                                                         255, 129, 97, 155, 60, 235, 240, 133, 241, 13, 67, 72, 241, 82, 10, 0 /*<- Encrypted content*/};
+        public static readonly byte[] UnencryptedData = { 49, 50, 51 };
+        public static readonly byte[] EncryptedData = { 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, /*<- IV - 16 bytes*/
+                                                        255, 129, 097, 155, 060, 235, 240, 133, 241, 013, 067, 072, 241, 082, 010, 000 /*<- Encrypted content - 16 bytes*/};
     }
 }

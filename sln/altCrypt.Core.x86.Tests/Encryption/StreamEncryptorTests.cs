@@ -101,10 +101,10 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
                 //Act
                 _streamEncryptor.EncryptToStream(_unencryptedFile, memStream);
                 actual = memStream.ToByteArray();
-
-                //Assert
-                Assert.IsTrue(actual.SequenceEqual(expected));
             }
+
+            //Assert
+            Assert.IsTrue(actual.SequenceEqual(expected));
         }
 
         [TestMethod]
@@ -138,7 +138,7 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
             //Assert
             Assert.IsTrue(actual.SequenceEqual(expected));
         }
-        
+
         private MemoryStream GetUnencryptedTestStream()
         {
             byte[] bytes = TestConstants.UnencryptedData;
@@ -150,7 +150,7 @@ namespace altCrypt.Core.x86.UnitTests.Encryption
 
         private MemoryStream GetEncryptedTestStream()
         {
-            byte[] bytes = TestConstants.UnencryptedData;
+            byte[] bytes = TestConstants.EncryptedData;
 
             var memStream = new MemoryStream();
             memStream.Write(bytes, 0, bytes.Length);
