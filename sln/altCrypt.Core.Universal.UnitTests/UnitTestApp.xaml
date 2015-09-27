@@ -1,0 +1,8 @@
+﻿<Application
+    x:Class="altCrypt.Core.Universal.UnitTests.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:altCrypt.Core.Universal.UnitTests"
+    RequestedTheme="Light">
+
+</Application>
