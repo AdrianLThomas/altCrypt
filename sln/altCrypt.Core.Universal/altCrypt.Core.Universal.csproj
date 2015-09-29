@@ -107,6 +107,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileSystem\LocalFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Properties\altCrypt.Core.Universal.rd.xml" />
   </ItemGroup>
@@ -118,7 +119,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Encryption\" />
-    <Folder Include="FileSystem\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

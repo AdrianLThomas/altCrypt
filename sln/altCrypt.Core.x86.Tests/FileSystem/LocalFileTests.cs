@@ -4,6 +4,7 @@ using System.Linq;
 using altCrypt.Core.x86.FileSystem;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System.Threading.Tasks;
 
 namespace altCrypt.Core.x86.UnitTests.FileSystem
 {
@@ -46,8 +47,45 @@ namespace altCrypt.Core.x86.UnitTests.FileSystem
             Stream stream = streamMock.Object;
             var file = new LocalFile(@"C:\TestPath");
 
-            //Act
+            //Act & Assert
             file.Write(stream); //Exception
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WriteAsync_ThrowsArgumentNullException_WhenStreamIsNull()
+        {
+            //Arrange
+            var file = new LocalFile(@"C:\TestPath");
+
+            //Act
+            await file.WriteAsync(null); //Exception
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public async Task WriteAsync_ThrowsArgumentException_WhenStreamIsntReadable()
+        {
+            //Arrange
+            Mock<Stream> streamMock = new Mock<Stream>();
+            streamMock.Setup(m => m.CanRead).Returns(false);
+
+            Stream stream = streamMock.Object;
+            var file = new LocalFile(@"C:\TestPath");
+
+            //Act & Assert
+            await file.WriteAsync(stream); //Exception
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FileNotFoundException))]
+        public void Read_ThrowsFileNotFoundException_WhenFileDoesntExist()
+        {
+            //Arrange
+            var file = new LocalFile($@"C:\{Guid.NewGuid()}.txt");
+
+            //Act & Assert
+            file.Read(); //Exception
         }
     }
 }
