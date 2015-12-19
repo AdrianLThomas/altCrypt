@@ -4,8 +4,6 @@ A highly flexible symmetric file encryption/decryption library for .NET. No mess
 The library can be used in your own applications.
 Or you can use the command line utility to encrypt your files and directories manually.
 
-It currently only supports the full version of .NET (4.6) but a WinRT / Universal solution is in the pipeline.
-
 ## Sample Usage
 ```c#
     IFile file = new LocalFile(@"C:\temp\MyFile.txt");         //1. Select a file to be encrypted
